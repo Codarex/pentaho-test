@@ -1,0 +1,5326 @@
+{
+ "layout": {
+  "title": "CDF - Sample structure",
+  "rows": [
+   {
+    "id": "eaba8522-59f4-4d5b-e8a8-62c9460c9666",
+    "type": "LayoutResourceFile",
+    "typeDesc": "Resource",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "name",
+      "value": "google_map_api",
+      "type": "Id"
+     },
+     {
+      "name": "resourceFile",
+      "value": "https://maps.googleapis.com/maps/api/js?sensor=false",
+      "type": "ResourceFile"
+     },
+     {
+      "name": "resourceType",
+      "value": "Javascript",
+      "type": "Label"
+     }
+    ]
+   },
+   {
+    "id": "45572951-3209-bba6-ed91-a398463c7be9",
+    "type": "LayoutResourceCode",
+    "typeDesc": "Resource",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "name",
+      "value": "gmap_initialize",
+      "type": "Id"
+     },
+     {
+      "name": "resourceType",
+      "value": "Javascript",
+      "type": "Label"
+     },
+     {
+      "name": "resourceCode",
+      "value": "var map;\r\nvar infoWindow = new google.maps.InfoWindow({});\r\nvar yellowColor = \"FFFF00\";\r\nvar redColor = \"FF0000\";\r\nvar greenColor = \"008000\";\r\nvar yellowPin = new google.maps.MarkerImage(\"http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|\" + yellowColor,\r\n        new google.maps.Size(21, 34),\r\n        new google.maps.Point(0,0),\r\n        new google.maps.Point(10, 34));\r\nvar redPin = new google.maps.MarkerImage(\"http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|\" + redColor,\r\n        new google.maps.Size(21, 34),\r\n        new google.maps.Point(0,0),\r\n        new google.maps.Point(10, 34));\r\nvar greenPin = new google.maps.MarkerImage(\"http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|\" + greenColor,\r\n        new google.maps.Size(21, 34),\r\n        new google.maps.Point(0,0),\r\n        new google.maps.Point(10, 34));\r\nfunction addCommas(nStr) {\r\n        nStr += '';\r\n        x = nStr.split('.');\r\n\t\tx1 = x[0];\r\n\t\tx2 = x.length > 1 ? '.' + x[1] : '';\r\n\t\tvar rgx = /(\\d+)(\\d{3})/;\r\n\t\twhile (rgx.test(x1)) {\r\n\t\t\tx1 = x1.replace(rgx, '$1' + ',' + '$2');\r\n\t\t}\r\n\t\treturn x1 + x2;\r\n\t}\r\nfunction initialize(latitude, longitude) {\r\n        var mapOptions = {\r\n          center: new google.maps.LatLng(latitude, longitude),\r\n          zoom: 7,\r\n          mapTypeId: google.maps.MapTypeId.ROADMAP\r\n        };\r\n        map = new google.maps.Map(document.getElementById(\"map_canvas\"),\r\n            mapOptions);\r\n      } \r\n//google.maps.event.addDomListener(window, 'load', initialize); \r\nfunction codeAddress(zipcode, latitude, longitude, currentYearWM, lastYearWM, currentYearAcc, lastYearAcc, estHousehold, estIncome) {\r\n        var currentPin = greenPin;\r\n        var pinTitle = 'Zipcode : ' + zipcode;\r\n        if (!currentYearWM) {\r\n            currentYearWM = 0;\r\n        }\r\n        if (!currentYearAcc) {\r\n            currentYearAcc = 0;\r\n        }\r\n        var salesChangeWM;\r\n        if (lastYearWM) {\r\n            salesChangeWM = ((currentYearWM - lastYearWM)/lastYearWM)*100;\r\n        } else {\r\n            salesChangeWM = 100;\r\n        }\r\n        var salesChangeAcc;\r\n        if (lastYearAcc)  {\r\n            salesChangeAcc = ((currentYearAcc - lastYearAcc)/lastYearAcc)*100;\r\n        } else {\r\n            salesChangeAcc = 100;\r\n        }\r\n        if (salesChangeWM < 0 && salesChangeAcc < 0) {\r\n            currentPin = redPin;\r\n        } else if (salesChangeWM < 0 || salesChangeAcc < 0) {\r\n            currentPin = yellowPin;\r\n        }\r\n        var marker = new google.maps.Marker({\r\n            map: map,\r\n            icon: currentPin,\r\n            title: pinTitle,\r\n            position: new google.maps.LatLng(latitude, longitude)\r\n        });\r\n        google.maps.event.addListener(marker, 'click', function() {\r\n            infoWindow.setContent('<b>' + pinTitle + '</b></br><table style=\"width:100%;\"><tr><td>WM Sales:</td><td>' + salesChangeWM.toFixed(1) + '%</td></tr><tr><td>Acc Sales:</td><td>' + salesChangeAcc.toFixed(1) + '%</td></tr><tr><td>Est Households: </td><td>' + addCommas(estHousehold.toFixed(0)) + '</td></tr><tr><td>Est Mean Income:</td><td>$'+ addCommas(estIncome.toFixed(0)) + '</td></tr></table>');\r\n            infoWindow.open(map,marker);\r\n        });\r\n} ",
+      "type": "Resource"
+     }
+    ]
+   },
+   {
+    "id": "eda037ec-aaf1-6a68-b74b-6cbc3d05cab9",
+    "type": "LayoutResourceFile",
+    "typeDesc": "Resource",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "name",
+      "value": "styles",
+      "type": "Id"
+     },
+     {
+      "name": "resourceFile",
+      "value": "${res:../styles.css}",
+      "type": "ResourceFile"
+     },
+     {
+      "name": "resourceType",
+      "value": "Css",
+      "type": "Label"
+     }
+    ]
+   },
+   {
+    "id": "6df953d4-3c32-b97d-675e-51178ce49914",
+    "type": "LayoutRow",
+    "typeDesc": "Row",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "name",
+      "value": "header",
+      "type": "Id"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "#b08b58",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "cdfdd-round",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "1d723a58-948b-73f9-68c6-44ad17dcef7e",
+    "type": "LayoutColumn",
+    "typeDesc": "Column",
+    "parent": "6df953d4-3c32-b97d-675e-51178ce49914",
+    "properties": [
+     {
+      "name": "name",
+      "value": "title_left",
+      "type": "Id"
+     },
+     {
+      "name": "columnSpan",
+      "value": "12",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrepend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnAppend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrependTop",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnAppendBottom",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBigBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "1ba4708e-cf83-0da4-ab77-7ce77e33b576",
+    "type": "LayoutHtml",
+    "typeDesc": "Html",
+    "parent": "1d723a58-948b-73f9-68c6-44ad17dcef7e",
+    "properties": [
+     {
+      "name": "name",
+      "value": "",
+      "type": "Id"
+     },
+     {
+      "name": "html",
+      "value": "<h1>Sales Overview YTD- General</h1> ",
+      "type": "Html"
+     },
+     {
+      "name": "fontSize",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "color",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "41080ed2-1791-f38c-9e53-90d48257c149",
+    "type": "LayoutColumn",
+    "typeDesc": "Column",
+    "parent": "6df953d4-3c32-b97d-675e-51178ce49914",
+    "properties": [
+     {
+      "name": "name",
+      "value": "display_date_range",
+      "type": "Id"
+     },
+     {
+      "name": "columnSpan",
+      "value": "12",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrepend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnAppend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrependTop",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnAppendBottom",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBigBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "right",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "ffe86087-4737-d063-b2b3-a9dc95484fa9",
+    "type": "LayoutSpace",
+    "typeDesc": "Space",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "77d32cbc-f143-5db7-3af2-ff1277592a8f",
+    "type": "LayoutRow",
+    "typeDesc": "Row",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "name",
+      "value": "selection",
+      "type": "Id"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "#cfa876",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "cdfdd-round",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "11e8d82c-79b1-475e-04ba-d3c721f60be1",
+    "type": "LayoutColumn",
+    "typeDesc": "Column",
+    "parent": "77d32cbc-f143-5db7-3af2-ff1277592a8f",
+    "properties": [
+     {
+      "name": "name",
+      "value": "",
+      "type": "Id"
+     },
+     {
+      "name": "columnSpan",
+      "value": "4",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrepend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnAppend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrependTop",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnAppendBottom",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBigBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "345a4acd-b9e7-403f-8f2d-ac5d7aca82c8",
+    "type": "LayoutHtml",
+    "typeDesc": "Html",
+    "parent": "11e8d82c-79b1-475e-04ba-d3c721f60be1",
+    "properties": [
+     {
+      "name": "name",
+      "value": "label",
+      "type": "Id"
+     },
+     {
+      "name": "html",
+      "value": "<h3 style=\"color:white;\">Sales Rep</h3> ",
+      "type": "Html"
+     },
+     {
+      "name": "fontSize",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "color",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "32a632b5-65df-58a9-b2d8-6e70cea23ef4",
+    "type": "LayoutColumn",
+    "typeDesc": "Column",
+    "parent": "77d32cbc-f143-5db7-3af2-ff1277592a8f",
+    "properties": [
+     {
+      "name": "name",
+      "value": "select_sales_rep",
+      "type": "Id"
+     },
+     {
+      "name": "columnSpan",
+      "value": "8",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrepend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnAppend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrependTop",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnAppendBottom",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBigBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "0d5024d0-acb3-7b67-90be-5643f735a44c",
+    "type": "LayoutSpace",
+    "typeDesc": "Space",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "d2d3e99f-9c1f-abc1-a60e-47a99b1e2f72",
+    "type": "LayoutRow",
+    "typeDesc": "Row",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "name",
+      "value": "sales_ytd_row",
+      "type": "Id"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "956d7088-4b5d-389d-ddf7-0f113f46a370",
+    "type": "LayoutColumn",
+    "typeDesc": "Column",
+    "parent": "d2d3e99f-9c1f-abc1-a60e-47a99b1e2f72",
+    "properties": [
+     {
+      "name": "name",
+      "value": "sales_ytd_col",
+      "type": "Id"
+     },
+     {
+      "name": "columnSpan",
+      "value": "24",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrepend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnAppend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrependTop",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnAppendBottom",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBigBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "cdfdd-round",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "672cf7e7-627a-4360-0902-b1532936f2c3",
+    "type": "LayoutRow",
+    "typeDesc": "Row",
+    "parent": "956d7088-4b5d-389d-ddf7-0f113f46a370",
+    "properties": [
+     {
+      "name": "name",
+      "value": "sales_info_head",
+      "type": "Id"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "af4f9825-c3c4-88a1-0514-fe124eb64822",
+    "type": "LayoutHtml",
+    "typeDesc": "Html",
+    "parent": "672cf7e7-627a-4360-0902-b1532936f2c3",
+    "properties": [
+     {
+      "name": "name",
+      "value": "title",
+      "type": "Id"
+     },
+     {
+      "name": "html",
+      "value": "<h3>Sales Performance</h3> ",
+      "type": "Html"
+     },
+     {
+      "name": "fontSize",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "color",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "9c4a620b-24ee-4560-c585-90d3f857de0d",
+    "type": "LayoutHtml",
+    "typeDesc": "Html",
+    "parent": "672cf7e7-627a-4360-0902-b1532936f2c3",
+    "properties": [
+     {
+      "name": "name",
+      "value": "ruler",
+      "type": "Id"
+     },
+     {
+      "name": "html",
+      "value": "<span class=\"rulerText rulerTextCol1\">Metric</span>\r\n<span class=\"rulerText rulerTextCol2\">Actual vs. Previous Year</span>\r\n<hr class=\"salesTitle\"/> ",
+      "type": "Html"
+     },
+     {
+      "name": "fontSize",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "color",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "40e4c013-8829-e7ce-86e4-1f35a0077bc0",
+    "type": "LayoutRow",
+    "typeDesc": "Row",
+    "parent": "956d7088-4b5d-389d-ddf7-0f113f46a370",
+    "properties": [
+     {
+      "name": "name",
+      "value": "sales_info_row",
+      "type": "Id"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "aa4c36f7-4e8b-c5c5-d6b5-2e986adce349",
+    "type": "LayoutColumn",
+    "typeDesc": "Column",
+    "parent": "40e4c013-8829-e7ce-86e4-1f35a0077bc0",
+    "properties": [
+     {
+      "name": "name",
+      "value": "sales_info_chart",
+      "type": "Id"
+     },
+     {
+      "name": "columnSpan",
+      "value": "16",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrepend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnAppend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrependTop",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnAppendBottom",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBigBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "18502f17-695e-f59b-6a1c-802ea9a3e9f9",
+    "type": "LayoutColumn",
+    "typeDesc": "Column",
+    "parent": "40e4c013-8829-e7ce-86e4-1f35a0077bc0",
+    "properties": [
+     {
+      "name": "name",
+      "value": "sales_info_table",
+      "type": "Id"
+     },
+     {
+      "name": "columnSpan",
+      "value": "7",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrepend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnAppend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrependTop",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnAppendBottom",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBigBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "height",
+      "value": "200",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "550012ca-9ba3-6ba1-8443-2cb6ef3da80c",
+    "type": "LayoutRow",
+    "typeDesc": "Row",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "name",
+      "value": "map_title",
+      "type": "Id"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "49b6a078-1b45-e098-775b-d48242180dc1",
+    "type": "LayoutHtml",
+    "typeDesc": "Html",
+    "parent": "550012ca-9ba3-6ba1-8443-2cb6ef3da80c",
+    "properties": [
+     {
+      "name": "name",
+      "value": "map_title",
+      "type": "Id"
+     },
+     {
+      "name": "html",
+      "value": "<h3>Sales Performance (Branded Wood Moulding and Accessories-Glass and Foam) by Zipcode</h3> ",
+      "type": "Html"
+     },
+     {
+      "name": "fontSize",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "color",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "ecdd7a46-ea70-5e8c-6109-c48ca81d6922",
+    "type": "LayoutRow",
+    "typeDesc": "Row",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "name",
+      "value": "map_canvas",
+      "type": "Id"
+     },
+     {
+      "name": "height",
+      "value": "400",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "e85da0d5-0033-652b-deac-758f91aad484",
+    "type": "LayoutRow",
+    "typeDesc": "Row",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "name",
+      "value": "Legend",
+      "type": "Id"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "3ef77ecb-6532-0da1-8227-4c5cb68b5ece",
+    "type": "LayoutHtml",
+    "typeDesc": "Html",
+    "parent": "e85da0d5-0033-652b-deac-758f91aad484",
+    "properties": [
+     {
+      "name": "name",
+      "value": "",
+      "type": "Id"
+     },
+     {
+      "name": "html",
+      "value": "<table style='width:600px; border:10px solid white'>\r\n    <tr>\r\n        <td style='width:5px;background-color:#008000;'>&nbsp</td>\r\n        <td>Branded Wood Moulding and Accessories sales up from last year</td>\r\n    </tr>\r\n    <tr>\r\n        <td style='width:5px;background-color:#FFFF00;'>&nbsp</td>\r\n        <td>Mix sales results from last year</td>\r\n    </tr>\r\n    <tr>\r\n        <td style='width:5px;background-color:#FF0000;'>&nbsp</td>\r\n        <td>Branded Wood Moulding and Accessories sales down from last year</td>\r\n    </tr>\r\n</table> ",
+      "type": "Html"
+     },
+     {
+      "name": "fontSize",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "color",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "22eb7a03-ebbb-8537-82be-643a53d435bd",
+    "type": "LayoutSpace",
+    "typeDesc": "Space",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "031f7ebe-1fa5-4343-4b74-4e5699561e5b",
+    "type": "LayoutRow",
+    "typeDesc": "Row",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "name",
+      "value": "selection",
+      "type": "Id"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "#cfa876",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "cdfdd-round",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "701109bc-e1a5-af19-bf03-455d44370535",
+    "type": "LayoutColumn",
+    "typeDesc": "Column",
+    "parent": "031f7ebe-1fa5-4343-4b74-4e5699561e5b",
+    "properties": [
+     {
+      "name": "name",
+      "value": "",
+      "type": "Id"
+     },
+     {
+      "name": "columnSpan",
+      "value": "4",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrepend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnAppend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrependTop",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnAppendBottom",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBigBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "f4160195-36b0-9afb-2110-ecbd55fd68a8",
+    "type": "LayoutHtml",
+    "typeDesc": "Html",
+    "parent": "701109bc-e1a5-af19-bf03-455d44370535",
+    "properties": [
+     {
+      "name": "name",
+      "value": "",
+      "type": "Id"
+     },
+     {
+      "name": "html",
+      "value": "<h3 style=\"color:white;\">Zip Code</h3> ",
+      "type": "Html"
+     },
+     {
+      "name": "fontSize",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "color",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "7c3280f0-4949-edc8-e539-203a4483ba67",
+    "type": "LayoutColumn",
+    "typeDesc": "Column",
+    "parent": "031f7ebe-1fa5-4343-4b74-4e5699561e5b",
+    "properties": [
+     {
+      "name": "name",
+      "value": "select_zip_code",
+      "type": "Id"
+     },
+     {
+      "name": "columnSpan",
+      "value": "6",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrepend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnAppend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrependTop",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnAppendBottom",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBigBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "7aa4d68f-21da-d2fa-a205-760ffbb9a5f1",
+    "type": "LayoutRow",
+    "typeDesc": "Row",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "name",
+      "value": "cust_by_zip_info",
+      "type": "Id"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   },
+   {
+    "id": "f6b8dbab-694a-684b-8e2f-afc349de9824",
+    "type": "LayoutColumn",
+    "typeDesc": "Column",
+    "parent": "7aa4d68f-21da-d2fa-a205-760ffbb9a5f1",
+    "properties": [
+     {
+      "name": "name",
+      "value": "customer_by_zip_chart",
+      "type": "Id"
+     },
+     {
+      "name": "columnSpan",
+      "value": "16",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrepend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnAppend",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "columnPrependTop",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnAppendBottom",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "columnBigBorder",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "height",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "backgroundColor",
+      "value": "",
+      "type": "Color"
+     },
+     {
+      "name": "roundCorners",
+      "value": "",
+      "type": "RoundCorners"
+     },
+     {
+      "name": "textAlign",
+      "value": "",
+      "type": "TextAlign"
+     },
+     {
+      "name": "cssClass",
+      "value": "",
+      "type": "String"
+     }
+    ]
+   }
+  ]
+ },
+ "components": {
+  "rows": [
+   {
+    "id": "SELECTORS",
+    "name": "Selects",
+    "type": "Label",
+    "typeDesc": "<i>Group</i>",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "Group",
+      "value": "Selects",
+      "type": "Label"
+     }
+    ]
+   },
+   {
+    "id": "4fd38107-ca50-ad8a-c5e0-0d5c9bad1037",
+    "type": "ComponentsSelect",
+    "typeDesc": "Select Component",
+    "parent": "SELECTORS",
+    "properties": [
+     {
+      "name": "name",
+      "value": "sales_rep_picker",
+      "type": "Id"
+     },
+     {
+      "name": "parameter",
+      "value": "${p:salesRep}",
+      "type": "Parameter"
+     },
+     {
+      "name": "listeners",
+      "value": "[]",
+      "type": "Listeners"
+     },
+     {
+      "name": "xActionArrayParameter",
+      "value": "[]",
+      "type": "ValuesArray"
+     },
+     {
+      "name": "valueAsId",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "externalPlugin",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "dataSource",
+      "type": "Datasource",
+      "value": "get_sales_rep"
+     },
+     {
+      "name": "valuesArray",
+      "value": "[]",
+      "type": "ValuesArray"
+     },
+     {
+      "name": "priority",
+      "value": 5,
+      "type": "Integer"
+     },
+     {
+      "name": "refreshPeriod",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "htmlObject",
+      "value": "${p:select_sales_rep}",
+      "type": "HtmlObject"
+     },
+     {
+      "name": "executeAtStart",
+      "value": "true",
+      "type": "Boolean"
+     },
+     {
+      "name": "preExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postFetch",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "preChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "tooltip",
+      "value": "",
+      "type": "Html"
+     },
+     {
+      "name": "extraOptions",
+      "value": "[]",
+      "type": "OptionArray"
+     }
+    ]
+   },
+   {
+    "id": "f6976088-d361-caeb-c6b1-49e39231251c",
+    "type": "ComponentsSelect",
+    "typeDesc": "Select Component",
+    "parent": "SELECTORS",
+    "properties": [
+     {
+      "name": "name",
+      "value": "zipcode_picker",
+      "type": "Id"
+     },
+     {
+      "name": "parameter",
+      "value": "${p:zipCode}",
+      "type": "Parameter"
+     },
+     {
+      "name": "listeners",
+      "value": "['${p:salesRep}']",
+      "type": "Listeners"
+     },
+     {
+      "name": "xActionArrayParameter",
+      "value": "[[\"salesRep\",\"salesRep\"]]",
+      "type": "ValuesArray"
+     },
+     {
+      "name": "valueAsId",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "externalPlugin",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "dataSource",
+      "type": "Datasource",
+      "value": "get_zip_from_sales_rep"
+     },
+     {
+      "name": "valuesArray",
+      "value": "[]",
+      "type": "ValuesArray"
+     },
+     {
+      "name": "priority",
+      "value": 5,
+      "type": "Integer"
+     },
+     {
+      "name": "refreshPeriod",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "htmlObject",
+      "value": "${p:select_zip_code}",
+      "type": "HtmlObject"
+     },
+     {
+      "name": "executeAtStart",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "preExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postFetch",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "preChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "tooltip",
+      "value": "",
+      "type": "Html"
+     },
+     {
+      "name": "extraOptions",
+      "value": "[]",
+      "type": "OptionArray"
+     }
+    ]
+   },
+   {
+    "id": "CHARTS",
+    "name": "Charts",
+    "type": "Label",
+    "typeDesc": "<i>Group</i>",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "Group",
+      "value": "Charts",
+      "type": "Label"
+     }
+    ]
+   },
+   {
+    "id": "1645ae82-a1a2-adae-8878-c5eb142e4564",
+    "type": "ComponentscccBarChart",
+    "typeDesc": "CCC Bar Chart",
+    "meta_cdwSupport": "true",
+    "parent": "CHARTS",
+    "properties": [
+     {
+      "name": "name",
+      "value": "sales_info_comp",
+      "type": "Id"
+     },
+     {
+      "name": "title",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "listeners",
+      "value": "['${p:salesRep}']",
+      "type": "Listeners"
+     },
+     {
+      "name": "customfunction",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "xActionArrayParameter",
+      "value": "[[\"salesRep\",\"salesRep\"]]",
+      "type": "ValuesArray"
+     },
+     {
+      "name": "dataSource",
+      "type": "Datasource",
+      "value": "get_revenue_comp"
+     },
+     {
+      "name": "width",
+      "value": "600",
+      "type": "Integer"
+     },
+     {
+      "name": "height",
+      "value": "200",
+      "type": "Integer"
+     },
+     {
+      "name": "refreshPeriod",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "priority",
+      "value": 5,
+      "type": "Integer"
+     },
+     {
+      "name": "cccColors",
+      "value": "[]",
+      "type": "Array"
+     },
+     {
+      "name": "htmlObject",
+      "value": "${p:sales_info_chart}",
+      "type": "HtmlObject"
+     },
+     {
+      "name": "executeAtStart",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "preExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postFetch",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "preChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "tooltip",
+      "value": "",
+      "type": "Html"
+     },
+     {
+      "name": "cccExtensionPoints",
+      "value": "[[\"yAxisRule_lineWidth\",\"0\"]]",
+      "type": "ValuesArray"
+     },
+     {
+      "name": "cccAnimate",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccBarSizeMax",
+      "value": 2000,
+      "type": "Float"
+     },
+     {
+      "name": "cccBarSizeRatio",
+      "value": 0.9,
+      "type": "Float"
+     },
+     {
+      "name": "cccBarStackedMargin",
+      "value": 0,
+      "type": "Float"
+     },
+     {
+      "name": "cccBaseAxisClickAction",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccBaseAxisDoubleClickAction",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccBaseAxisGrid",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccBaseAxisLabelSpacingMin",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccBaseAxisOffset",
+      "value": 0,
+      "type": "Float"
+     },
+     {
+      "name": "cccBaseAxisOverlappedLabelsMode",
+      "value": "hide",
+      "type": "cccBaseAxisOverlappedLabelsModeCustom"
+     },
+     {
+      "name": "cccBaseAxisPosition",
+      "value": "",
+      "type": "cccBaseAxisPositionCustom"
+     },
+     {
+      "name": "cccBaseAxisSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccBaseAxisSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccBaseAxisTicks",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccBaseAxisTitle",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccBaseAxisTitleAlign",
+      "value": "",
+      "type": "cccBaseAxisTitleAlignCustom"
+     },
+     {
+      "name": "cccBaseAxisTitleFont",
+      "value": "14px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccBaseAxisTitleMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccBaseAxisTitleSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccBaseAxisTitleSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccBaseAxisTooltipAutoContent",
+      "value": "value",
+      "type": "cccBaseAxisTooltipAutoContentCustom"
+     },
+     {
+      "name": "cccBaseAxisTooltipEnabled",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccBaseAxisTooltipFormat",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccBaseAxisVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccCategoryRole",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccClearSelectionMode",
+      "value": "emptySpaceClick",
+      "type": "cccClearSelectionModeCustom"
+     },
+     {
+      "name": "cccClickable",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccClickAction",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccColor2AxisColors",
+      "value": "[]",
+      "type": "Array"
+     },
+     {
+      "name": "cccColor2AxisLegendClickMode",
+      "value": "toggleVisible",
+      "type": "cccColor2AxisLegendClickModeCustom"
+     },
+     {
+      "name": "cccColor2AxisLegendDrawLine",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccColor2AxisLegendDrawMarker",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccColor2AxisLegendShape",
+      "value": "",
+      "type": "cccColor2AxisLegendShapeCustom"
+     },
+     {
+      "name": "cccColor2AxisLegendVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccColor2AxisTransform",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccColor2AxisUnbound",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccColorRole",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccColorTransform",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccColorUnbound",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccCompatVersion",
+      "value": 2,
+      "type": "Float"
+     },
+     {
+      "name": "cccContentMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccContentPaddings",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccCrosstabMode",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccCtrlSelectMode",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccDataCategoriesCount",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccDataIgnoreMetadataLabels",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccDataMeasuresInColumns",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccDataPartRole",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccDataSeparator",
+      "value": "~",
+      "type": "String"
+     },
+     {
+      "name": "cccDoubleClickAction",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccGroupedLabelSep",
+      "value": " ~ ",
+      "type": "String"
+     },
+     {
+      "name": "cccHoverable",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccIgnoreNulls",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccInteractive",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccIsMultiValued",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccLeafContentOverflow",
+      "value": "auto",
+      "type": "cccLeafContentOverflowCustom"
+     },
+     {
+      "name": "cccLegend",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccLegendAlign",
+      "value": "",
+      "type": "cccLegendAlignCustom"
+     },
+     {
+      "name": "cccLegendClickMode",
+      "value": "toggleVisible",
+      "type": "cccLegendClickModeCustom"
+     },
+     {
+      "name": "cccLegendDrawLine",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccLegendDrawMarker",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccLegendFont",
+      "value": "10px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccLegendItemPadding",
+      "value": 2.5,
+      "type": "Float"
+     },
+     {
+      "name": "cccLegendMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccLegendMarkerSize",
+      "value": 15,
+      "type": "Float"
+     },
+     {
+      "name": "cccLegendPaddings",
+      "value": "5",
+      "type": "String"
+     },
+     {
+      "name": "cccLegendPosition",
+      "value": "bottom",
+      "type": "cccLegendPositionCustom"
+     },
+     {
+      "name": "cccLegendShape",
+      "value": "",
+      "type": "cccLegendShapeCustom"
+     },
+     {
+      "name": "cccLegendSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccLegendSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccLegendTextMargin",
+      "value": 6,
+      "type": "Float"
+     },
+     {
+      "name": "cccLegendVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccMargins",
+      "value": "3",
+      "type": "String"
+     },
+     {
+      "name": "cccMeasuresIndexes",
+      "value": "[]",
+      "type": "Array"
+     },
+     {
+      "name": "cccMultiChartColumnsMax",
+      "value": 3,
+      "type": "Float"
+     },
+     {
+      "name": "cccMultiChartIndexes",
+      "value": "[]",
+      "type": "Array"
+     },
+     {
+      "name": "cccMultiChartMax",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccMultiChartRole",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccMultiChartSingleColFillsHeight",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccMultiChartSingleRowFillsHeight",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccNullInterpolationMode",
+      "value": "none",
+      "type": "cccNullInterpolationModeCustom"
+     },
+     {
+      "name": "cccOrientation",
+      "value": "horizontal",
+      "type": "cccOrientationCustom"
+     },
+     {
+      "name": "cccOrtho2AxisDesiredTickCount",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrtho2AxisDomainRoundMode",
+      "value": "tick",
+      "type": "cccOrtho2AxisDomainRoundModeCustom"
+     },
+     {
+      "name": "cccOrtho2AxisDomainScope",
+      "value": "global",
+      "type": "cccOrtho2AxisDomainScopeCustom"
+     },
+     {
+      "name": "cccOrtho2AxisFixedMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisFixedMin",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisGrid",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrtho2AxisLabelSpacingMin",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrtho2AxisMinorTicks",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrtho2AxisOffset",
+      "value": 0,
+      "type": "Float"
+     },
+     {
+      "name": "cccOrtho2AxisOriginIsZero",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrtho2AxisOverlappedLabelsMode",
+      "value": "hide",
+      "type": "cccOrtho2AxisOverlappedLabelsModeCustom"
+     },
+     {
+      "name": "cccOrtho2AxisPosition",
+      "value": "",
+      "type": "cccOrtho2AxisPositionCustom"
+     },
+     {
+      "name": "cccOrtho2AxisSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisTickExponentMax",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrtho2AxisTickExponentMin",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrtho2AxisTickFormatter",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccOrtho2AxisTicks",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrtho2AxisTitle",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisTitleAlign",
+      "value": "",
+      "type": "cccOrtho2AxisTitleAlignCustom"
+     },
+     {
+      "name": "cccOrtho2AxisTitleFont",
+      "value": "12px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisTitleMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisTitleSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisTitleSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrtho2AxisZeroLine",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrthoAxisDesiredTickCount",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrthoAxisDomainRoundMode",
+      "value": "tick",
+      "type": "cccOrthoAxisDomainRoundModeCustom"
+     },
+     {
+      "name": "cccOrthoAxisDomainScope",
+      "value": "global",
+      "type": "cccOrthoAxisDomainScopeCustom"
+     },
+     {
+      "name": "cccOrthoAxisFixedMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisFixedMin",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisGrid",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrthoAxisLabelSpacingMin",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrthoAxisMinorTicks",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrthoAxisOffset",
+      "value": 0,
+      "type": "Float"
+     },
+     {
+      "name": "cccOrthoAxisOriginIsZero",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrthoAxisOverlappedLabelsMode",
+      "value": "hide",
+      "type": "cccOrthoAxisOverlappedLabelsModeCustom"
+     },
+     {
+      "name": "cccOrthoAxisPosition",
+      "value": "",
+      "type": "cccOrthoAxisPositionCustom"
+     },
+     {
+      "name": "cccOrthoAxisSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisTickExponentMax",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrthoAxisTickExponentMin",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrthoAxisTickFormatter",
+      "value": "function f(d){return '$ '+ sprintf('%d',d/1000)+'k';}",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccOrthoAxisTicks",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrthoAxisTitle",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisTitleAlign",
+      "value": "",
+      "type": "cccOrthoAxisTitleAlignCustom"
+     },
+     {
+      "name": "cccOrthoAxisTitleFont",
+      "value": "12px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisTitleMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisTitleSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisTitleSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrthoAxisZeroLine",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOverflowMarkersVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccPaddings",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccPanelSizeRatio",
+      "value": 0.9,
+      "type": "Float"
+     },
+     {
+      "name": "cccPercentValueFormat",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccPlot2",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccPlot2AreasVisible",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccPlot2ColorAxis",
+      "value": 2,
+      "type": "Float"
+     },
+     {
+      "name": "cccPlot2DotsVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccPlot2LinesVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccPlot2NullInterpolationMode",
+      "value": "none",
+      "type": "cccPlot2NullInterpolationModeCustom"
+     },
+     {
+      "name": "cccPlot2OrthoAxis",
+      "value": 1,
+      "type": "Float"
+     },
+     {
+      "name": "cccPlot2Series",
+      "value": "[]",
+      "type": "Array"
+     },
+     {
+      "name": "cccPlot2SeriesIndexes",
+      "value": -1,
+      "type": "Array"
+     },
+     {
+      "name": "cccPlot2Stacked",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccPlot2TrendLabel",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccPlot2TrendType",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccPlot2ValuesAnchor",
+      "value": "",
+      "type": "cccPlot2ValuesAnchorCustom"
+     },
+     {
+      "name": "cccPlot2ValuesFont",
+      "value": "10px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccPlot2ValuesMask",
+      "value": "{value}",
+      "type": "String"
+     },
+     {
+      "name": "cccPlot2ValuesVisible",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccPlotFrameVisible",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccRenderCallback",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccSelectable",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccSelectionChangedAction",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccSeriesInRows",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccSeriesRole",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallAspectRatio",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccSmallContentMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallContentPaddings",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallHeight",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallMargins",
+      "value": "2%",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallPaddings",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallTitleAlign",
+      "value": "",
+      "type": "cccSmallTitleAlignCustom"
+     },
+     {
+      "name": "cccSmallTitleFont",
+      "value": "14px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallTitleMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallTitlePaddings",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallTitlePosition",
+      "value": "top",
+      "type": "cccSmallTitlePositionCustom"
+     },
+     {
+      "name": "cccSmallTitleSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallTitleSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallWidth",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccStacked",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTimeSeries",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTimeSeriesFormat",
+      "value": "%Y-%m-%d",
+      "type": "String"
+     },
+     {
+      "name": "cccTitleAlign",
+      "value": "",
+      "type": "cccTitleAlignCustom"
+     },
+     {
+      "name": "cccTitleFont",
+      "value": "14px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccTitleMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccTitlePaddings",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccTitlePosition",
+      "value": "top",
+      "type": "cccTitlePositionCustom"
+     },
+     {
+      "name": "cccTitleSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccTitleSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccTooltipArrowVisible",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTooltipEnabled",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTooltipFade",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTooltipFollowMouse",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTooltipFormat",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccTooltipGravity",
+      "value": "",
+      "type": "cccTooltipGravityCustom"
+     },
+     {
+      "name": "cccTooltipHtml",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTooltipOffset",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccTooltipOpacity",
+      "value": 0.9,
+      "type": "Float"
+     },
+     {
+      "name": "cccTooltipUseCorners",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTrendAreasVisible",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTrendColorAxis",
+      "value": 2,
+      "type": "Float"
+     },
+     {
+      "name": "cccTrendDotsVisible",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTrendLabel",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccTrendLinesVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTrendOrthoAxis",
+      "value": 1,
+      "type": "Float"
+     },
+     {
+      "name": "cccTrendStacked",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTrendType",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccTrendValuesAnchor",
+      "value": "right",
+      "type": "cccTrendValuesAnchorCustom"
+     },
+     {
+      "name": "cccTrendValuesFont",
+      "value": "10px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccTrendValuesMask",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccTrendValuesVisible",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccUserSelectionAction",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccValueFormat",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccValueRole",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccValuesAnchor",
+      "value": "",
+      "type": "cccValuesAnchorCustom"
+     },
+     {
+      "name": "cccValuesFont",
+      "value": "10px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccValuesMask",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccValuesVisible",
+      "value": "",
+      "type": "Boolean"
+     }
+    ]
+   },
+   {
+    "id": "6a59b0e2-694e-3280-0d6b-7769398b6a1d",
+    "type": "ComponentscccBarChart",
+    "typeDesc": "CCC Bar Chart",
+    "meta_cdwSupport": "true",
+    "parent": "CHARTS",
+    "properties": [
+     {
+      "name": "name",
+      "value": "cust_by_zip",
+      "type": "Id"
+     },
+     {
+      "name": "title",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "listeners",
+      "value": "['${p:zipCode}']",
+      "type": "Listeners"
+     },
+     {
+      "name": "customfunction",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "xActionArrayParameter",
+      "value": "[[\"zipCode\",\"zipCode\"]]",
+      "type": "ValuesArray"
+     },
+     {
+      "name": "dataSource",
+      "type": "Datasource",
+      "value": "get_cust_from_zip"
+     },
+     {
+      "name": "height",
+      "value": "200",
+      "type": "Integer"
+     },
+     {
+      "name": "width",
+      "value": "600",
+      "type": "Integer"
+     },
+     {
+      "name": "refreshPeriod",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "priority",
+      "value": 5,
+      "type": "Integer"
+     },
+     {
+      "name": "cccColors",
+      "value": "[]",
+      "type": "Array"
+     },
+     {
+      "name": "htmlObject",
+      "value": "${p:customer_by_zip_chart}",
+      "type": "HtmlObject"
+     },
+     {
+      "name": "executeAtStart",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "preExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postFetch",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "preChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "tooltip",
+      "value": "",
+      "type": "Html"
+     },
+     {
+      "name": "cccExtensionPoints",
+      "value": "[[\"yAxisRule_lineWidth\",\"0\"]]",
+      "type": "ValuesArray"
+     },
+     {
+      "name": "cccAnimate",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccBarSizeMax",
+      "value": 2000,
+      "type": "Float"
+     },
+     {
+      "name": "cccBarSizeRatio",
+      "value": 0.9,
+      "type": "Float"
+     },
+     {
+      "name": "cccBarStackedMargin",
+      "value": 0,
+      "type": "Float"
+     },
+     {
+      "name": "cccBaseAxisClickAction",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccBaseAxisDoubleClickAction",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccBaseAxisGrid",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccBaseAxisLabelSpacingMin",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccBaseAxisOffset",
+      "value": 0,
+      "type": "Float"
+     },
+     {
+      "name": "cccBaseAxisOverlappedLabelsMode",
+      "value": "hide",
+      "type": "cccBaseAxisOverlappedLabelsModeCustom"
+     },
+     {
+      "name": "cccBaseAxisPosition",
+      "value": "",
+      "type": "cccBaseAxisPositionCustom"
+     },
+     {
+      "name": "cccBaseAxisSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccBaseAxisSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccBaseAxisTicks",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccBaseAxisTitle",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccBaseAxisTitleAlign",
+      "value": "",
+      "type": "cccBaseAxisTitleAlignCustom"
+     },
+     {
+      "name": "cccBaseAxisTitleFont",
+      "value": "14px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccBaseAxisTitleMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccBaseAxisTitleSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccBaseAxisTitleSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccBaseAxisTooltipAutoContent",
+      "value": "value",
+      "type": "cccBaseAxisTooltipAutoContentCustom"
+     },
+     {
+      "name": "cccBaseAxisTooltipEnabled",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccBaseAxisTooltipFormat",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccBaseAxisVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccCategoryRole",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccClearSelectionMode",
+      "value": "emptySpaceClick",
+      "type": "cccClearSelectionModeCustom"
+     },
+     {
+      "name": "cccClickable",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccClickAction",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccColor2AxisColors",
+      "value": "[]",
+      "type": "Array"
+     },
+     {
+      "name": "cccColor2AxisLegendClickMode",
+      "value": "toggleVisible",
+      "type": "cccColor2AxisLegendClickModeCustom"
+     },
+     {
+      "name": "cccColor2AxisLegendDrawLine",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccColor2AxisLegendDrawMarker",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccColor2AxisLegendShape",
+      "value": "",
+      "type": "cccColor2AxisLegendShapeCustom"
+     },
+     {
+      "name": "cccColor2AxisLegendVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccColor2AxisTransform",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccColor2AxisUnbound",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccColorRole",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccColorTransform",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccColorUnbound",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccCompatVersion",
+      "value": 2,
+      "type": "Float"
+     },
+     {
+      "name": "cccContentMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccContentPaddings",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccCrosstabMode",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccCtrlSelectMode",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccDataCategoriesCount",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccDataIgnoreMetadataLabels",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccDataMeasuresInColumns",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccDataPartRole",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccDataSeparator",
+      "value": "~",
+      "type": "String"
+     },
+     {
+      "name": "cccDoubleClickAction",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccGroupedLabelSep",
+      "value": " ~ ",
+      "type": "String"
+     },
+     {
+      "name": "cccHoverable",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccIgnoreNulls",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccInteractive",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccIsMultiValued",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccLeafContentOverflow",
+      "value": "auto",
+      "type": "cccLeafContentOverflowCustom"
+     },
+     {
+      "name": "cccLegend",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccLegendAlign",
+      "value": "",
+      "type": "cccLegendAlignCustom"
+     },
+     {
+      "name": "cccLegendClickMode",
+      "value": "toggleVisible",
+      "type": "cccLegendClickModeCustom"
+     },
+     {
+      "name": "cccLegendDrawLine",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccLegendDrawMarker",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccLegendFont",
+      "value": "10px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccLegendItemPadding",
+      "value": 2.5,
+      "type": "Float"
+     },
+     {
+      "name": "cccLegendMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccLegendMarkerSize",
+      "value": 15,
+      "type": "Float"
+     },
+     {
+      "name": "cccLegendPaddings",
+      "value": "5",
+      "type": "String"
+     },
+     {
+      "name": "cccLegendPosition",
+      "value": "bottom",
+      "type": "cccLegendPositionCustom"
+     },
+     {
+      "name": "cccLegendShape",
+      "value": "",
+      "type": "cccLegendShapeCustom"
+     },
+     {
+      "name": "cccLegendSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccLegendSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccLegendTextMargin",
+      "value": 6,
+      "type": "Float"
+     },
+     {
+      "name": "cccLegendVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccMargins",
+      "value": "3",
+      "type": "String"
+     },
+     {
+      "name": "cccMeasuresIndexes",
+      "value": "[]",
+      "type": "Array"
+     },
+     {
+      "name": "cccMultiChartColumnsMax",
+      "value": 3,
+      "type": "Float"
+     },
+     {
+      "name": "cccMultiChartIndexes",
+      "value": "[]",
+      "type": "Array"
+     },
+     {
+      "name": "cccMultiChartMax",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccMultiChartRole",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccMultiChartSingleColFillsHeight",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccMultiChartSingleRowFillsHeight",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccNullInterpolationMode",
+      "value": "none",
+      "type": "cccNullInterpolationModeCustom"
+     },
+     {
+      "name": "cccOrientation",
+      "value": "horizontal",
+      "type": "cccOrientationCustom"
+     },
+     {
+      "name": "cccOrtho2AxisDesiredTickCount",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrtho2AxisDomainRoundMode",
+      "value": "tick",
+      "type": "cccOrtho2AxisDomainRoundModeCustom"
+     },
+     {
+      "name": "cccOrtho2AxisDomainScope",
+      "value": "global",
+      "type": "cccOrtho2AxisDomainScopeCustom"
+     },
+     {
+      "name": "cccOrtho2AxisFixedMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisFixedMin",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisGrid",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrtho2AxisLabelSpacingMin",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrtho2AxisMinorTicks",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrtho2AxisOffset",
+      "value": 0,
+      "type": "Float"
+     },
+     {
+      "name": "cccOrtho2AxisOriginIsZero",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrtho2AxisOverlappedLabelsMode",
+      "value": "hide",
+      "type": "cccOrtho2AxisOverlappedLabelsModeCustom"
+     },
+     {
+      "name": "cccOrtho2AxisPosition",
+      "value": "",
+      "type": "cccOrtho2AxisPositionCustom"
+     },
+     {
+      "name": "cccOrtho2AxisSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisTickExponentMax",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrtho2AxisTickExponentMin",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrtho2AxisTickFormatter",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccOrtho2AxisTicks",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrtho2AxisTitle",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisTitleAlign",
+      "value": "",
+      "type": "cccOrtho2AxisTitleAlignCustom"
+     },
+     {
+      "name": "cccOrtho2AxisTitleFont",
+      "value": "12px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisTitleMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisTitleSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisTitleSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrtho2AxisVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrtho2AxisZeroLine",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrthoAxisDesiredTickCount",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrthoAxisDomainRoundMode",
+      "value": "tick",
+      "type": "cccOrthoAxisDomainRoundModeCustom"
+     },
+     {
+      "name": "cccOrthoAxisDomainScope",
+      "value": "global",
+      "type": "cccOrthoAxisDomainScopeCustom"
+     },
+     {
+      "name": "cccOrthoAxisFixedMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisFixedMin",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisGrid",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrthoAxisLabelSpacingMin",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrthoAxisMinorTicks",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrthoAxisOffset",
+      "value": 0,
+      "type": "Float"
+     },
+     {
+      "name": "cccOrthoAxisOriginIsZero",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrthoAxisOverlappedLabelsMode",
+      "value": "hide",
+      "type": "cccOrthoAxisOverlappedLabelsModeCustom"
+     },
+     {
+      "name": "cccOrthoAxisPosition",
+      "value": "",
+      "type": "cccOrthoAxisPositionCustom"
+     },
+     {
+      "name": "cccOrthoAxisSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisTickExponentMax",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrthoAxisTickExponentMin",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccOrthoAxisTickFormatter",
+      "value": "function f(d){return '$ '+ sprintf('%d',d/1000)+'k';}",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccOrthoAxisTicks",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrthoAxisTitle",
+      "value": "Total Sales",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisTitleAlign",
+      "value": "",
+      "type": "cccOrthoAxisTitleAlignCustom"
+     },
+     {
+      "name": "cccOrthoAxisTitleFont",
+      "value": "12px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisTitleMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisTitleSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisTitleSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccOrthoAxisVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOrthoAxisZeroLine",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccOverflowMarkersVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccPaddings",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccPanelSizeRatio",
+      "value": 0.9,
+      "type": "Float"
+     },
+     {
+      "name": "cccPercentValueFormat",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccPlot2",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccPlot2AreasVisible",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccPlot2ColorAxis",
+      "value": 2,
+      "type": "Float"
+     },
+     {
+      "name": "cccPlot2DotsVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccPlot2LinesVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccPlot2NullInterpolationMode",
+      "value": "none",
+      "type": "cccPlot2NullInterpolationModeCustom"
+     },
+     {
+      "name": "cccPlot2OrthoAxis",
+      "value": 1,
+      "type": "Float"
+     },
+     {
+      "name": "cccPlot2Series",
+      "value": "[]",
+      "type": "Array"
+     },
+     {
+      "name": "cccPlot2SeriesIndexes",
+      "value": -1,
+      "type": "Array"
+     },
+     {
+      "name": "cccPlot2Stacked",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccPlot2TrendLabel",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccPlot2TrendType",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccPlot2ValuesAnchor",
+      "value": "",
+      "type": "cccPlot2ValuesAnchorCustom"
+     },
+     {
+      "name": "cccPlot2ValuesFont",
+      "value": "10px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccPlot2ValuesMask",
+      "value": "{value}",
+      "type": "String"
+     },
+     {
+      "name": "cccPlot2ValuesVisible",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccPlotFrameVisible",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccRenderCallback",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccSelectable",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccSelectionChangedAction",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccSeriesInRows",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccSeriesRole",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallAspectRatio",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccSmallContentMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallContentPaddings",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallHeight",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallMargins",
+      "value": "2%",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallPaddings",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallTitleAlign",
+      "value": "",
+      "type": "cccSmallTitleAlignCustom"
+     },
+     {
+      "name": "cccSmallTitleFont",
+      "value": "14px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallTitleMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallTitlePaddings",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallTitlePosition",
+      "value": "top",
+      "type": "cccSmallTitlePositionCustom"
+     },
+     {
+      "name": "cccSmallTitleSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallTitleSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccSmallWidth",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccStacked",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTimeSeries",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTimeSeriesFormat",
+      "value": "%Y-%m-%d",
+      "type": "String"
+     },
+     {
+      "name": "cccTitleAlign",
+      "value": "",
+      "type": "cccTitleAlignCustom"
+     },
+     {
+      "name": "cccTitleFont",
+      "value": "14px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccTitleMargins",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccTitlePaddings",
+      "value": "0",
+      "type": "String"
+     },
+     {
+      "name": "cccTitlePosition",
+      "value": "top",
+      "type": "cccTitlePositionCustom"
+     },
+     {
+      "name": "cccTitleSize",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccTitleSizeMax",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccTooltipArrowVisible",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTooltipEnabled",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTooltipFade",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTooltipFollowMouse",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTooltipFormat",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccTooltipGravity",
+      "value": "",
+      "type": "cccTooltipGravityCustom"
+     },
+     {
+      "name": "cccTooltipHtml",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTooltipOffset",
+      "value": "",
+      "type": "Float"
+     },
+     {
+      "name": "cccTooltipOpacity",
+      "value": 0.9,
+      "type": "Float"
+     },
+     {
+      "name": "cccTooltipUseCorners",
+      "value": "",
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTrendAreasVisible",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTrendColorAxis",
+      "value": 2,
+      "type": "Float"
+     },
+     {
+      "name": "cccTrendDotsVisible",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTrendLabel",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccTrendLinesVisible",
+      "value": true,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTrendOrthoAxis",
+      "value": 1,
+      "type": "Float"
+     },
+     {
+      "name": "cccTrendStacked",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccTrendType",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccTrendValuesAnchor",
+      "value": "right",
+      "type": "cccTrendValuesAnchorCustom"
+     },
+     {
+      "name": "cccTrendValuesFont",
+      "value": "10px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccTrendValuesMask",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccTrendValuesVisible",
+      "value": false,
+      "type": "Boolean"
+     },
+     {
+      "name": "cccUserSelectionAction",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccValueFormat",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "cccValueRole",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccValuesAnchor",
+      "value": "",
+      "type": "cccValuesAnchorCustom"
+     },
+     {
+      "name": "cccValuesFont",
+      "value": "10px sans-serif",
+      "type": "String"
+     },
+     {
+      "name": "cccValuesMask",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "cccValuesVisible",
+      "value": "",
+      "type": "Boolean"
+     }
+    ]
+   },
+   {
+    "id": "OTHERCOMPONENTS",
+    "name": "Other components",
+    "type": "Label",
+    "typeDesc": "<i>Group</i>",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "Group",
+      "value": "Other components",
+      "type": "Label"
+     }
+    ]
+   },
+   {
+    "id": "5a9bf2ff-0134-3c7d-9cde-b6ac2bd97066",
+    "type": "ComponentsQuery",
+    "typeDesc": "Query Component",
+    "parent": "OTHERCOMPONENTS",
+    "properties": [
+     {
+      "name": "name",
+      "value": "sales_by_zip_map",
+      "type": "Id"
+     },
+     {
+      "name": "listeners",
+      "value": "['${p:salesRep}']",
+      "type": "Listeners"
+     },
+     {
+      "name": "xActionArrayParameter",
+      "value": "[[\"salesRep\",\"salesRep\"]]",
+      "type": "ValuesArray"
+     },
+     {
+      "name": "resultvar",
+      "value": "",
+      "type": "Result"
+     },
+     {
+      "name": "dataSource",
+      "type": "Datasource",
+      "value": "get_sales_by_zip_map"
+     },
+     {
+      "name": "refreshPeriod",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "priority",
+      "value": 5,
+      "type": "Integer"
+     },
+     {
+      "name": "htmlObject",
+      "value": "${p:map_canvas}",
+      "type": "HtmlObject"
+     },
+     {
+      "name": "executeAtStart",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "preExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postFetch",
+      "value": "function f(data){\r\n    for (var i=0; i < data.resultset.length; i++) {\r\n        codeAddress(data.resultset[i][0], data.resultset[i][1],data.resultset[i][2], data.resultset[i][3], data.resultset[i][4], data.resultset[i][5], data.resultset[i][6], data.resultset[i][7], data.resultset[i][8]);\r\n    }\r\n}",
+      "type": "JavaScript"
+     },
+     {
+      "name": "preChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "tooltip",
+      "value": "",
+      "type": "Html"
+     }
+    ]
+   },
+   {
+    "id": "81e5d573-061b-7a00-13ba-90e4608587aa",
+    "type": "ComponentsQuery",
+    "typeDesc": "Query Component",
+    "parent": "OTHERCOMPONENTS",
+    "properties": [
+     {
+      "name": "name",
+      "value": "center_map",
+      "type": "Id"
+     },
+     {
+      "name": "listeners",
+      "value": "['${p:salesRep}']",
+      "type": "Listeners"
+     },
+     {
+      "name": "xActionArrayParameter",
+      "value": "[[\"salesRep\",\"salesRep\"]]",
+      "type": "ValuesArray"
+     },
+     {
+      "name": "resultvar",
+      "value": "",
+      "type": "Result"
+     },
+     {
+      "name": "dataSource",
+      "type": "Datasource",
+      "value": "get_terr_latlog"
+     },
+     {
+      "name": "refreshPeriod",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "priority",
+      "value": "3",
+      "type": "Integer"
+     },
+     {
+      "name": "htmlObject",
+      "value": "${p:map_canvas}",
+      "type": "HtmlObject"
+     },
+     {
+      "name": "executeAtStart",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "preExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postFetch",
+      "value": "function f(data){\r\n    //initialize(61.189195, -149.892759);\r\n    //alert(\"hello\" + data.resultset[0][0]);\r\n    initialize(data.resultset[0][0], data.resultset[0][1]);\r\n}",
+      "type": "JavaScript"
+     },
+     {
+      "name": "preChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "tooltip",
+      "value": "",
+      "type": "Html"
+     }
+    ]
+   },
+   {
+    "id": "cb6ab9be-f595-ec43-6955-a7f54c3810ac",
+    "type": "ComponentsQuery",
+    "typeDesc": "Query Component",
+    "parent": "OTHERCOMPONENTS",
+    "properties": [
+     {
+      "name": "name",
+      "value": "date_range_display",
+      "type": "Id"
+     },
+     {
+      "name": "listeners",
+      "value": "[]",
+      "type": "Listeners"
+     },
+     {
+      "name": "xActionArrayParameter",
+      "value": "[]",
+      "type": "ValuesArray"
+     },
+     {
+      "name": "resultvar",
+      "value": "",
+      "type": "Result"
+     },
+     {
+      "name": "dataSource",
+      "type": "Datasource",
+      "value": "get_date_range"
+     },
+     {
+      "name": "refreshPeriod",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "priority",
+      "value": 5,
+      "type": "Integer"
+     },
+     {
+      "name": "htmlObject",
+      "value": "${p:display_date_range}",
+      "type": "HtmlObject"
+     },
+     {
+      "name": "executeAtStart",
+      "value": "true",
+      "type": "Boolean"
+     },
+     {
+      "name": "preExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postExecution",
+      "value": "function qc1() {\r\n    /* var tmp_string = startDate.replace(/-/g, '/');\r\n    var tmp_date = new Date(tmp_string);\r\n    Note: date function converts date to local time but assumes UTC as input, that's why the\r\n    offset math below, alternative would be to replace - in date to /, see above function\r\n    */\r\nvar tmp_start_date = new Date(startDate);\r\nvar tmp_end_date = new Date(endDate);\r\nvar tmp_offset = tmp_start_date.getTimezoneOffset() + 60;\r\ntmp_start_date.setMinutes(tmp_start_date.getMinutes() + tmp_offset);\r\ntmp_end_date.setMinutes(tmp_end_date.getMinutes() + tmp_offset);\r\nvar month=new Array();\r\nmonth[0]=\"January\";\r\nmonth[1]=\"February\";\r\nmonth[2]=\"March\";\r\nmonth[3]=\"April\";\r\nmonth[4]=\"May\";\r\nmonth[5]=\"June\";\r\nmonth[6]=\"July\";\r\nmonth[7]=\"August\";\r\nmonth[8]=\"September\";\r\nmonth[9]=\"October\";\r\nmonth[10]=\"November\";\r\nmonth[11]=\"December\";\r\nvar tmp_start_month = month[tmp_start_date.getMonth()];\r\nvar tmp_end_month = month[tmp_end_date.getMonth()];\r\ndocument.getElementById('display_date_range').innerHTML = '<h2 style=\"color:white\">' + tmp_start_month + ' - ' + tmp_end_month + '</h2>';\r\n}",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postFetch",
+      "value": "function pf1(data){\r\nstartDate = data.resultset[0][0];\r\nendDate = data.resultset[0][1];\r\n}",
+      "type": "JavaScript"
+     },
+     {
+      "name": "preChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "tooltip",
+      "value": "",
+      "type": "Html"
+     }
+    ]
+   },
+   {
+    "id": "e6d4e80f-8532-f2f8-78d4-68b7e4f7ff2f",
+    "type": "ComponentsTable",
+    "typeDesc": "table Component",
+    "parent": "OTHERCOMPONENTS",
+    "properties": [
+     {
+      "name": "name",
+      "value": "show_sales_info",
+      "type": "Id"
+     },
+     {
+      "name": "expandContainerObject",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "listeners",
+      "value": "['${p:salesRep}']",
+      "type": "Listeners"
+     },
+     {
+      "name": "oLanguage",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "colSortable",
+      "value": "[]",
+      "type": "Array"
+     },
+     {
+      "name": "xActionArrayParameter",
+      "value": "[[\"salesRep\",\"salesRep\"]]",
+      "type": "ValuesArray"
+     },
+     {
+      "name": "expandParameters",
+      "value": "[]",
+      "type": "ValuesArray"
+     },
+     {
+      "name": "colHeaders",
+      "value": "[\" \",\"Current\",\"LastYear\"]",
+      "type": "Array"
+     },
+     {
+      "name": "colTypes",
+      "value": "[]",
+      "type": "colTypesCustom"
+     },
+     {
+      "name": "colFormats",
+      "value": "[\"%s\",\"$%d\",\"$%d\"]",
+      "type": "Array"
+     },
+     {
+      "name": "colWidths",
+      "value": "[]",
+      "type": "Array"
+     },
+     {
+      "name": "info",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "sort",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "expandOnClick",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "paginate",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "displayLength",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "lengthChange",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "filter",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "colSearchable",
+      "value": "[]",
+      "type": "Array"
+     },
+     {
+      "name": "drawCallback",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "dataSource",
+      "type": "Datasource",
+      "value": "get_revenue_comp_tab"
+     },
+     {
+      "name": "sortBy",
+      "value": "[]",
+      "type": "SortByArray"
+     },
+     {
+      "name": "sDom",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "refreshPeriod",
+      "value": "",
+      "type": "Integer"
+     },
+     {
+      "name": "priority",
+      "value": 5,
+      "type": "Integer"
+     },
+     {
+      "name": "tableStyle",
+      "value": "themeroller",
+      "type": "TableStyle"
+     },
+     {
+      "name": "paginationType",
+      "value": "two_button",
+      "type": "PaginationType"
+     },
+     {
+      "name": "htmlObject",
+      "value": "${p:sales_info_table}",
+      "type": "HtmlObject"
+     },
+     {
+      "name": "executeAtStart",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "paginateServerside",
+      "value": "false",
+      "type": "Boolean"
+     },
+     {
+      "name": "preExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postFetch",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postExecution",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "preChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "postChange",
+      "value": "",
+      "type": "JavaScript"
+     },
+     {
+      "name": "tooltip",
+      "value": "",
+      "type": "Html"
+     },
+     {
+      "name": "extraOptions",
+      "value": "[]",
+      "type": "OptionArray"
+     },
+     {
+      "name": "cccClickAction",
+      "value": "",
+      "type": "JavaScript"
+     }
+    ]
+   },
+   {
+    "id": "GENERIC",
+    "name": "Generic",
+    "type": "Label",
+    "typeDesc": "<i>Group</i>",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "Group",
+      "value": "Generic",
+      "type": "Label"
+     }
+    ]
+   },
+   {
+    "id": "d6804fb3-56ba-7292-fb36-1e554569c930",
+    "type": "ComponentsParameter",
+    "typeDesc": "Parameter",
+    "parent": "GENERIC",
+    "properties": [
+     {
+      "name": "name",
+      "value": "startDate",
+      "type": "Id"
+     },
+     {
+      "name": "propertyValue",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "parameterViewRole",
+      "value": "unused",
+      "type": "parameterViewRoleCustom"
+     },
+     {
+      "name": "bookmarkable",
+      "value": "false",
+      "type": "Boolean"
+     }
+    ]
+   },
+   {
+    "id": "4b52a409-88f7-bb1b-8b84-4535561114e8",
+    "type": "ComponentsParameter",
+    "typeDesc": "Parameter",
+    "parent": "GENERIC",
+    "properties": [
+     {
+      "name": "name",
+      "value": "endDate",
+      "type": "Id"
+     },
+     {
+      "name": "propertyValue",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "parameterViewRole",
+      "value": "unused",
+      "type": "parameterViewRoleCustom"
+     },
+     {
+      "name": "bookmarkable",
+      "value": "false",
+      "type": "Boolean"
+     }
+    ]
+   },
+   {
+    "id": "c0590b89-938b-9ea9-9456-f688790cb960",
+    "type": "ComponentsParameter",
+    "typeDesc": "Parameter",
+    "parent": "GENERIC",
+    "properties": [
+     {
+      "name": "name",
+      "value": "salesRep",
+      "type": "Id"
+     },
+     {
+      "name": "propertyValue",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "parameterViewRole",
+      "value": "unused",
+      "type": "parameterViewRoleCustom"
+     },
+     {
+      "name": "bookmarkable",
+      "value": "false",
+      "type": "Boolean"
+     }
+    ]
+   },
+   {
+    "id": "637b9b81-e38d-1e30-3b57-a564214ddfe9",
+    "type": "ComponentsParameter",
+    "typeDesc": "Parameter",
+    "parent": "GENERIC",
+    "properties": [
+     {
+      "name": "name",
+      "value": "zipCode",
+      "type": "Id"
+     },
+     {
+      "name": "propertyValue",
+      "value": "",
+      "type": "String"
+     },
+     {
+      "name": "parameterViewRole",
+      "value": "unused",
+      "type": "parameterViewRoleCustom"
+     },
+     {
+      "name": "bookmarkable",
+      "value": "false",
+      "type": "Boolean"
+     }
+    ]
+   }
+  ]
+ },
+ "datasources": {
+  "rows": [
+   {
+    "id": "SQL",
+    "name": "SQL Queries",
+    "type": "Label",
+    "typeDesc": "<i>Group</i>",
+    "parent": "UnIqEiD",
+    "properties": [
+     {
+      "name": "Group",
+      "value": "SQL Queries",
+      "type": "Label"
+     }
+    ]
+   },
+   {
+    "id": "75126209-4f84-74ac-d75e-7e661f098e85",
+    "type": "Componentssql_sqlJdbc",
+    "typeDesc": "sql over sqlJdbc",
+    "meta": "CDA",
+    "meta_conntype": "sql.jdbc",
+    "meta_datype": "sql",
+    "parent": "SQL",
+    "properties": [
+     {
+      "name": "name",
+      "value": "get_date_range",
+      "type": "Id"
+     },
+     {
+      "name": "driver",
+      "value": "org.postgresql.Driver",
+      "type": "String"
+     },
+     {
+      "name": "user",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "pass",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "url",
+      "value": "jdbc:postgresql://localhost:5432/larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "access",
+      "value": "public",
+      "type": "Access"
+     },
+     {
+      "name": "query",
+      "value": "with find_max_year AS\r\n    (SELECT max(swd_year) AS max_year \r\n    FROM \tsales_monthly_agg_dashboard)\r\n\r\nSELECT\tmin(month_start_date), max(month_start_date)\r\nFROM\tsales_monthly_agg_dashboard, find_max_year\r\nWHERE \tswd_year = max_year",
+      "type": "SqlQuery"
+     },
+     {
+      "name": "parameters",
+      "value": "[]",
+      "type": "CdaParameters"
+     },
+     {
+      "name": "outputMode",
+      "value": "include",
+      "type": "OutputMode"
+     },
+     {
+      "name": "cdacolumns",
+      "value": "[]",
+      "type": "CdaColumnsArray"
+     },
+     {
+      "name": "cdacalculatedcolumns",
+      "value": "[]",
+      "type": "CdaCalculatedColumnsArray"
+     },
+     {
+      "name": "output",
+      "value": "[]",
+      "type": "IndexArray"
+     },
+     {
+      "name": "cacheDuration",
+      "value": 3600,
+      "type": "Integer"
+     },
+     {
+      "name": "cache",
+      "value": "true",
+      "type": "Boolean"
+     }
+    ]
+   },
+   {
+    "id": "c6713292-f6ab-0e33-a76b-2397565cf4f1",
+    "type": "Componentssql_sqlJdbc",
+    "typeDesc": "sql over sqlJdbc",
+    "meta": "CDA",
+    "meta_conntype": "sql.jdbc",
+    "meta_datype": "sql",
+    "parent": "SQL",
+    "properties": [
+     {
+      "name": "name",
+      "value": "get_sales_rep",
+      "type": "Id"
+     },
+     {
+      "name": "pass",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "driver",
+      "value": "org.postgresql.Driver",
+      "type": "String"
+     },
+     {
+      "name": "user",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "url",
+      "value": "jdbc:postgresql://localhost:5432/larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "access",
+      "value": "public",
+      "type": "Access"
+     },
+     {
+      "name": "query",
+      "value": "SELECT s_trid, sales_rep from sales_dim\r\n--WHERE s_trid LIKE '655'\r\nORDER BY s_trid",
+      "type": "SqlQuery"
+     },
+     {
+      "name": "parameters",
+      "value": "[]",
+      "type": "CdaParameters"
+     },
+     {
+      "name": "outputMode",
+      "value": "include",
+      "type": "OutputMode"
+     },
+     {
+      "name": "cdacolumns",
+      "value": "[]",
+      "type": "CdaColumnsArray"
+     },
+     {
+      "name": "cdacalculatedcolumns",
+      "value": "[]",
+      "type": "CdaCalculatedColumnsArray"
+     },
+     {
+      "name": "output",
+      "value": "[]",
+      "type": "IndexArray"
+     },
+     {
+      "name": "cacheDuration",
+      "value": 3600,
+      "type": "Integer"
+     },
+     {
+      "name": "cache",
+      "value": "true",
+      "type": "Boolean"
+     }
+    ]
+   },
+   {
+    "id": "db9392b9-3941-64a0-3ec0-823653364843",
+    "type": "Componentssql_sqlJdbc",
+    "typeDesc": "sql over sqlJdbc",
+    "meta": "CDA",
+    "meta_conntype": "sql.jdbc",
+    "meta_datype": "sql",
+    "parent": "SQL",
+    "properties": [
+     {
+      "name": "name",
+      "value": "get_sales_by_zip_map",
+      "type": "Id"
+     },
+     {
+      "name": "pass",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "driver",
+      "value": "org.postgresql.Driver",
+      "type": "String"
+     },
+     {
+      "name": "user",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "url",
+      "value": "jdbc:postgresql://localhost:5432/larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "access",
+      "value": "public",
+      "type": "Access"
+     },
+     {
+      "name": "query",
+      "value": "/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard2 only contains the data \r\n    for the dates we need (YTD last year and this yesr)\r\n*/\r\nWITH wm_sales AS (SELECT zipcode, \r\n    \tsum(case swd_year when 2013 then saexp end) as CurrentSalesWM,\r\n\t\tsum(case swd_year when 2012 then saexp end) as LastYearWM\r\n\tFROM\r\n\t\tsales_monthly_agg_dashboard, product_dim, customer\r\n\tWHERE    \r\n\t\tslitm = product_id\r\n        AND prod_top like '%Moulding%'\r\n    \tAND\tc3_2 LIKE 'Wood%' \r\n        AND c3_3 NOT LIKE 'Other%' -- branded wood\r\n\t\tAND s_shan = sshan\r\n\t\tAND s_trid LIKE ${salesRep}\r\n\tGROUP BY zipcode),\r\nglass_info AS\r\n    (SELECT    distinct product_id AS glass_product_id\r\n\tFROM \tproduct_dim\r\n\tWHERE\tprod_top LIKE 'Access%'\r\n\tAND\tc3_2 LIKE 'Glaz%'\r\n\tAND\t(prod_category LIKE '%useum'\r\n\t\tOR prod_category LIKE '%onservation%lear%')\r\n\t),\r\nfoam_info AS\r\n\t(SELECT distinct u_litm AS foam_product_id\r\n\tFROM product\r\n\tWHERE u_srp2dsc LIKE '%FOAM%'),\t\r\nproduct_info AS\r\n\t(SELECT product_id, c3_0\r\n\tFROM \tproduct_dim, glass_info, foam_info\r\n\tWHERE\tproduct_id = glass_product_id\r\n\t\tOR product_id = foam_product_id\r\n\tORDER BY product_id),\r\nacc_sales AS (SELECT zipcode, \r\n\t\tsum(case swd_year when 2013 then saexp end) as CurrentSalesAcc,\r\n\t\tsum(case swd_year when 2012 then saexp end) as LastYearAcc\r\n\tFROM\r\n\t\tsales_monthly_agg_dashboard, product_info, customer\r\n\tWHERE    \r\n\t\tslitm = product_id\r\n\t\tAND s_shan = sshan\r\n\t\tAND s_trid LIKE ${salesRep}\r\n\tGROUP BY zipcode),\r\n\r\nall_sales AS (SELECT wm_sales.zipcode, CurrentSalesWM, LastYearWM, CurrentSalesAcc, LastYearAcc\r\n\tFROM wm_sales FULL JOIN acc_sales \r\n\tON wm_sales.zipcode = acc_sales.zipcode)\r\n\r\nSELECT    all_sales.zipcode, latitude, longitude,\r\n\tCurrentSalesWM, LastYearWM, CurrentSalesAcc, LastYearAcc, \r\n\tHC01_EST_VC02,HC02_EST_VC02\r\nFROM\tall_sales, s1902, zcta\r\nWHERE\tall_sales.zipcode = geo_id2\r\n\tAND all_sales.zipcode = zcta.zipcode;",
+      "type": "SqlQuery"
+     },
+     {
+      "name": "parameters",
+      "value": "[[\"salesRep\",\"\",\"String\",\"\"]]",
+      "type": "CdaParameters"
+     },
+     {
+      "name": "outputMode",
+      "value": "include",
+      "type": "OutputMode"
+     },
+     {
+      "name": "cdacolumns",
+      "value": "[]",
+      "type": "CdaColumnsArray"
+     },
+     {
+      "name": "cdacalculatedcolumns",
+      "value": "[]",
+      "type": "CdaCalculatedColumnsArray"
+     },
+     {
+      "name": "output",
+      "value": "[]",
+      "type": "IndexArray"
+     },
+     {
+      "name": "cacheDuration",
+      "value": 3600,
+      "type": "Integer"
+     },
+     {
+      "name": "cache",
+      "value": "true",
+      "type": "Boolean"
+     }
+    ]
+   },
+   {
+    "id": "1c4f4337-15aa-4a77-ec4a-0993a7984348",
+    "type": "Componentssql_sqlJdbc",
+    "typeDesc": "sql over sqlJdbc",
+    "meta": "CDA",
+    "meta_conntype": "sql.jdbc",
+    "meta_datype": "sql",
+    "parent": "SQL",
+    "properties": [
+     {
+      "name": "name",
+      "value": "get_zip_from_sales_rep",
+      "type": "Id"
+     },
+     {
+      "name": "pass",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "driver",
+      "value": "org.postgresql.Driver",
+      "type": "String"
+     },
+     {
+      "name": "user",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "url",
+      "value": "jdbc:postgresql://localhost:5432/larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "access",
+      "value": "public",
+      "type": "Access"
+     },
+     {
+      "name": "query",
+      "value": "SELECT     distinct zipcode\r\nFROM\tsales_monthly_agg_dashboard, customer\r\nWHERE   s_shan = sshan\r\n    AND s_trid LIKE ${salesRep}\r\nORDER BY zipcode",
+      "type": "SqlQuery"
+     },
+     {
+      "name": "parameters",
+      "value": "[[\"salesRep\",\"\",\"String\",\"\"]]",
+      "type": "CdaParameters"
+     },
+     {
+      "name": "outputMode",
+      "value": "include",
+      "type": "OutputMode"
+     },
+     {
+      "name": "cdacolumns",
+      "value": "[]",
+      "type": "CdaColumnsArray"
+     },
+     {
+      "name": "cdacalculatedcolumns",
+      "value": "[]",
+      "type": "CdaCalculatedColumnsArray"
+     },
+     {
+      "name": "output",
+      "value": "[]",
+      "type": "IndexArray"
+     },
+     {
+      "name": "cacheDuration",
+      "value": 3600,
+      "type": "Integer"
+     },
+     {
+      "name": "cache",
+      "value": "true",
+      "type": "Boolean"
+     }
+    ]
+   },
+   {
+    "id": "4491a3e5-8f49-effa-87fd-2d684a592a7a",
+    "type": "Componentssql_sqlJdbc",
+    "typeDesc": "sql over sqlJdbc",
+    "meta": "CDA",
+    "meta_conntype": "sql.jdbc",
+    "meta_datype": "sql",
+    "parent": "SQL",
+    "properties": [
+     {
+      "name": "name",
+      "value": "get_cust_from_zip",
+      "type": "Id"
+     },
+     {
+      "name": "user",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "pass",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "driver",
+      "value": "org.postgresql.Driver",
+      "type": "String"
+     },
+     {
+      "name": "url",
+      "value": "jdbc:postgresql://localhost:5432/larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "access",
+      "value": "public",
+      "type": "Access"
+     },
+     {
+      "name": "query",
+      "value": "/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard only contains the data \r\n    for the dates we need (YTD last year and this yesr)\r\n*/\r\nWITH sales_info AS\r\n\t(SELECT\tsshan, \r\n            sum(case swd_year when 2013 then saexp end) as Current,\r\n            sum(case swd_year when 2012 then saexp end) as LastYear\r\n\tFROM\tsales_monthly_agg_dashboard\r\n\tWHERE\tzipcode LIKE ${zipCode}\r\n\tGROUP BY sshan)\r\nSELECT\ts_alph as Customer, Current, LastYear\r\nFROM\tsales_info, customer\r\nWHERE\tsshan = s_shan\r\nORDER BY Current ASC",
+      "type": "SqlQuery"
+     },
+     {
+      "name": "parameters",
+      "value": "[[\"zipCode\",\"\",\"String\",\"\"]]",
+      "type": "CdaParameters"
+     },
+     {
+      "name": "outputMode",
+      "value": "include",
+      "type": "OutputMode"
+     },
+     {
+      "name": "cdacolumns",
+      "value": "[]",
+      "type": "CdaColumnsArray"
+     },
+     {
+      "name": "cdacalculatedcolumns",
+      "value": "[]",
+      "type": "CdaCalculatedColumnsArray"
+     },
+     {
+      "name": "output",
+      "value": "[]",
+      "type": "IndexArray"
+     },
+     {
+      "name": "cacheDuration",
+      "value": 3600,
+      "type": "Integer"
+     },
+     {
+      "name": "cache",
+      "value": "true",
+      "type": "Boolean"
+     }
+    ]
+   },
+   {
+    "id": "7de21ae9-e28d-63cb-d4b7-ce2f5cbf2ee1",
+    "type": "Componentssql_sqlJdbc",
+    "typeDesc": "sql over sqlJdbc",
+    "meta": "CDA",
+    "meta_conntype": "sql.jdbc",
+    "meta_datype": "sql",
+    "parent": "SQL",
+    "properties": [
+     {
+      "name": "name",
+      "value": "get_terr_latlog",
+      "type": "Id"
+     },
+     {
+      "name": "pass",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "driver",
+      "value": "org.postgresql.Driver",
+      "type": "String"
+     },
+     {
+      "name": "user",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "url",
+      "value": "jdbc:postgresql://localhost:5432/larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "access",
+      "value": "public",
+      "type": "Access"
+     },
+     {
+      "name": "query",
+      "value": "SELECT latitude, longitude \r\nFROM terr_main_zip\r\nWHERE terr_id LIKE ${salesRep};",
+      "type": "SqlQuery"
+     },
+     {
+      "name": "parameters",
+      "value": "[[\"salesRep\",\"\",\"String\",\"\"]]",
+      "type": "CdaParameters"
+     },
+     {
+      "name": "outputMode",
+      "value": "include",
+      "type": "OutputMode"
+     },
+     {
+      "name": "cdacolumns",
+      "value": "[]",
+      "type": "CdaColumnsArray"
+     },
+     {
+      "name": "cdacalculatedcolumns",
+      "value": "[]",
+      "type": "CdaCalculatedColumnsArray"
+     },
+     {
+      "name": "output",
+      "value": "[]",
+      "type": "IndexArray"
+     },
+     {
+      "name": "cacheDuration",
+      "value": 3600,
+      "type": "Integer"
+     },
+     {
+      "name": "cache",
+      "value": "true",
+      "type": "Boolean"
+     }
+    ]
+   },
+   {
+    "id": "478222a7-e59d-d529-860c-39625f10fdaf",
+    "type": "Componentssql_sqlJdbc",
+    "typeDesc": "sql over sqlJdbc",
+    "meta": "CDA",
+    "meta_conntype": "sql.jdbc",
+    "meta_datype": "sql",
+    "parent": "SQL",
+    "properties": [
+     {
+      "name": "name",
+      "value": "get_revenue_comp",
+      "type": "Id"
+     },
+     {
+      "name": "pass",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "driver",
+      "value": "org.postgresql.Driver",
+      "type": "String"
+     },
+     {
+      "name": "user",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "url",
+      "value": "jdbc:postgresql://localhost:5432/larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "access",
+      "value": "public",
+      "type": "Access"
+     },
+     {
+      "name": "query",
+      "value": "/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard only contains the data \r\n    for the dates we need (YTD last year and this yesr)\r\n*/\r\n(\r\nSELECT    'Margin' as SERIES,\r\n    sum(case swd_year when 2013 then saexp - secst end) as Current,\r\n    sum(case swd_year when 2012 then saexp - secst end) as LastYear\r\nFROM\r\n        sales_monthly_agg_dashboard, customer\r\nWHERE\t\r\n\ts_shan = sshan\r\n  AND\ts_trid LIKE ${salesRep}\r\n)\r\nUNION ALL \r\n(\r\nSELECT\r\n\t'Revenue' as SERIES,\r\n\tsum(case swd_year when 2013 then saexp end) as Current,\r\n\tsum(case swd_year when 2012 then saexp end) as LastYear\r\n\t\r\nFROM\r\n        sales_monthly_agg_dashboard, customer\r\nWHERE\t\r\n\ts_shan = sshan\r\n  AND    s_trid LIKE ${salesRep}\r\n)",
+      "type": "SqlQuery"
+     },
+     {
+      "name": "parameters",
+      "value": "[[\"salesRep\",\"\",\"String\",\"\"]]",
+      "type": "CdaParameters"
+     },
+     {
+      "name": "outputMode",
+      "value": "include",
+      "type": "OutputMode"
+     },
+     {
+      "name": "cdacolumns",
+      "value": "[]",
+      "type": "CdaColumnsArray"
+     },
+     {
+      "name": "cdacalculatedcolumns",
+      "value": "[]",
+      "type": "CdaCalculatedColumnsArray"
+     },
+     {
+      "name": "output",
+      "value": "[]",
+      "type": "IndexArray"
+     },
+     {
+      "name": "cacheDuration",
+      "value": 3600,
+      "type": "Integer"
+     },
+     {
+      "name": "cache",
+      "value": "true",
+      "type": "Boolean"
+     }
+    ]
+   },
+   {
+    "id": "d043dbf7-b30e-0c93-f655-1ae0ab9372e1",
+    "type": "Componentssql_sqlJdbc",
+    "typeDesc": "sql over sqlJdbc",
+    "meta": "CDA",
+    "meta_conntype": "sql.jdbc",
+    "meta_datype": "sql",
+    "parent": "SQL",
+    "properties": [
+     {
+      "name": "name",
+      "value": "get_revenue_comp_tab",
+      "type": "Id"
+     },
+     {
+      "name": "user",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "pass",
+      "value": "larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "driver",
+      "value": "org.postgresql.Driver",
+      "type": "String"
+     },
+     {
+      "name": "url",
+      "value": "jdbc:postgresql://localhost:5432/larsonjuhl",
+      "type": "String"
+     },
+     {
+      "name": "access",
+      "value": "public",
+      "type": "Access"
+     },
+     {
+      "name": "query",
+      "value": "/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard only contains the data \r\n    for the dates we need (YTD last year and this yesr)\r\n*/\r\n(\r\nSELECT\r\n    'Revenue' as SERIES,\r\n\tsum(case swd_year when 2013 then saexp end) as Current,\r\n\tsum(case swd_year when 2012 then saexp end) as LastYear\r\n\t\r\nFROM\r\n        sales_monthly_agg_dashboard, customer\r\nWHERE\t\r\n\ts_shan = sshan\r\n  AND    s_trid LIKE ${salesRep}\r\n)\r\nUNION ALL\r\n(\r\nSELECT    'Margin' as SERIES,\r\n    sum(case swd_year when 2013 then saexp - secst end) as Current,\r\n    sum(case swd_year when 2012 then saexp - secst end) as LastYear\r\nFROM\r\n        sales_monthly_agg_dashboard, customer\r\nWHERE\t\r\n\ts_shan = sshan\r\n  AND\ts_trid LIKE ${salesRep}\r\n)",
+      "type": "SqlQuery"
+     },
+     {
+      "name": "parameters",
+      "value": "[[\"salesRep\",\"\",\"String\",\"\"]]",
+      "type": "CdaParameters"
+     },
+     {
+      "name": "outputMode",
+      "value": "include",
+      "type": "OutputMode"
+     },
+     {
+      "name": "cdacolumns",
+      "value": "[]",
+      "type": "CdaColumnsArray"
+     },
+     {
+      "name": "cdacalculatedcolumns",
+      "value": "[]",
+      "type": "CdaCalculatedColumnsArray"
+     },
+     {
+      "name": "output",
+      "value": "[]",
+      "type": "IndexArray"
+     },
+     {
+      "name": "cacheDuration",
+      "value": 3600,
+      "type": "Integer"
+     },
+     {
+      "name": "cache",
+      "value": "true",
+      "type": "Boolean"
+     }
+    ]
+   }
+  ]
+ },
+ "filename": "/LJ Demo/Sales/DbRepGeneral.cdfde"
+}

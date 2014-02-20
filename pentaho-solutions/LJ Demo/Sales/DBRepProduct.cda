@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDADescriptor>
+   <DataSources>
+      <Connection id="get_date_range" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_sales_rep" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_top_moudling" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_top_acc" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_under_moudling" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_under_acc" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_top_moulding_margin" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_top_acc_margin" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+   </DataSources>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_date_range"
+               id="get_date_range"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>with find_max_year AS&#xD;
+    (SELECT max(swd_year) AS max_year &#xD;
+	FROM 	sales_monthly_agg_dashboard)&#xD;
+&#xD;
+SELECT	min(month_start_date), max(month_start_date)&#xD;
+FROM	sales_monthly_agg_dashboard, find_max_year&#xD;
+WHERE 	swd_year = max_year</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_sales_rep"
+               id="get_sales_rep"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT s_trid, sales_rep &#xD;
+FROM sales_dim&#xD;
+--WHERE s_trid LIKE '655'&#xD;
+ORDER BY s_trid</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_top_moudling"
+               id="get_top_moudling"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesRep" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+WITH top_collections AS -- get the top collections&#xD;
+    (SELECT	c3_0 as Collection,&#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard, product_dim, customer&#xD;
+	WHERE   &#xD;
+		souom != 'C' AND souom != 'J'&#xD;
+		AND slitm = product_id&#xD;
+		AND s_shan = sshan&#xD;
+		AND s_trid LIKE ${salesRep}&#xD;
+		AND prod_top like '%Moulding%'&#xD;
+		AND	((c3_2 LIKE 'Wood%' AND c3_3 NOT LIKE 'Other%') -- branded wood&#xD;
+			OR (prod_family LIKE '%Arq%') -- arqadia&#xD;
+			OR (c3_2 LIKE 'Metal%')) -- metal&#xD;
+	GROUP BY Collection&#xD;
+	ORDER BY CurrentSales DESC NULLS LAST LIMIT 10)&#xD;
+&#xD;
+SELECT Collection, CurrentSales, LastYear&#xD;
+FROM top_collections&#xD;
+ORDER BY CurrentSales ASC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_top_acc"
+               id="get_top_acc"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesRep" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+WITH glass_info AS&#xD;
+    (SELECT	distinct product_id AS glass_product_id&#xD;
+	FROM 	product_dim&#xD;
+	WHERE	prod_top LIKE 'Access%'&#xD;
+	AND	c3_2 LIKE 'Glaz%'&#xD;
+	AND	(prod_category LIKE '%useum'&#xD;
+		OR prod_category LIKE '%onservation%lear%')&#xD;
+	),&#xD;
+foam_info AS&#xD;
+	(SELECT distinct u_litm AS foam_product_id&#xD;
+	FROM product&#xD;
+	WHERE u_srp2dsc LIKE '%FOAM%'),	&#xD;
+product_info AS&#xD;
+	(SELECT product_id, c3_0&#xD;
+	FROM 	product_dim, glass_info, foam_info&#xD;
+	WHERE	product_id = glass_product_id&#xD;
+		OR product_id = foam_product_id&#xD;
+	ORDER BY product_id),&#xD;
+top_collections AS -- get the top collections&#xD;
+    (SELECT	c3_0 as Collection,&#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard, customer, product_info&#xD;
+	WHERE   &#xD;
+		s_shan = sshan&#xD;
+		AND s_trid LIKE ${salesRep}&#xD;
+		AND slitm = product_id&#xD;
+&#xD;
+	GROUP BY Collection&#xD;
+	ORDER BY CurrentSales DESC NULLS LAST LIMIT 10)&#xD;
+&#xD;
+SELECT Collection, CurrentSales, LastYear&#xD;
+FROM top_collections&#xD;
+ORDER BY CurrentSales ASC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_under_moudling"
+               id="get_under_moudling"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesRep" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+WITH total_collections AS -- get the top collections&#xD;
+    (SELECT	c3_0 as Collection,&#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard, product_dim, customer&#xD;
+	WHERE   &#xD;
+		souom != 'C' AND souom != 'J'&#xD;
+		AND slitm = product_id&#xD;
+		AND s_shan = sshan&#xD;
+		AND s_trid LIKE ${salesRep}&#xD;
+		AND prod_top like '%Moulding%'&#xD;
+		AND	((c3_2 LIKE 'Wood%' AND c3_3 NOT LIKE 'Other%') -- branded wood&#xD;
+			OR (prod_family LIKE '%Arq%') -- arqadia&#xD;
+			OR (c3_2 LIKE 'Metal%')) -- metal&#xD;
+	GROUP BY Collection),&#xD;
+	&#xD;
+bottom_ten AS&#xD;
+	(SELECT Collection, CurrentSales, LastYear, &#xD;
+		(CurrentSales - LastYear) as SalesDiff&#xD;
+	FROM	total_collections&#xD;
+	ORDER BY SalesDiff ASC NULLS LAST LIMIT 10)&#xD;
+&#xD;
+SELECT 	Collection, CurrentSales, LastYear&#xD;
+FROM	bottom_ten&#xD;
+ORDER BY SalesDiff DESC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_under_acc"
+               id="get_under_acc"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesRep" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+WITH glass_info AS&#xD;
+    (SELECT	distinct product_id AS glass_product_id&#xD;
+	FROM 	product_dim&#xD;
+	WHERE	prod_top LIKE 'Access%'&#xD;
+	AND	c3_2 LIKE 'Glaz%'&#xD;
+	AND	(prod_category LIKE '%useum'&#xD;
+		OR prod_category LIKE '%onservation%lear%')&#xD;
+	),&#xD;
+foam_info AS&#xD;
+	(SELECT distinct u_litm AS foam_product_id&#xD;
+	FROM product&#xD;
+	WHERE u_srp2dsc LIKE '%FOAM%'),	&#xD;
+product_info AS&#xD;
+	(SELECT product_id, c3_0&#xD;
+	FROM 	product_dim, glass_info, foam_info&#xD;
+	WHERE	product_id = glass_product_id&#xD;
+		OR product_id = foam_product_id&#xD;
+	ORDER BY product_id),&#xD;
+total_collections AS -- get collections info&#xD;
+    (SELECT	c3_0 as Collection,&#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard, product_info, customer&#xD;
+	WHERE   &#xD;
+		s_shan = sshan&#xD;
+		AND s_trid LIKE  ${salesRep}&#xD;
+		AND slitm = product_id&#xD;
+	GROUP BY Collection),&#xD;
+bottom_ten AS&#xD;
+	(SELECT Collection, CurrentSales, LastYear, &#xD;
+		(CurrentSales - LastYear) as SalesDiff&#xD;
+	FROM	total_collections&#xD;
+	ORDER BY SalesDiff ASC NULLS LAST LIMIT 10)&#xD;
+&#xD;
+SELECT 	Collection, CurrentSales, LastYear&#xD;
+FROM	bottom_ten&#xD;
+ORDER BY SalesDiff DESC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_top_moulding_margin"
+               id="get_top_moulding_margin"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesRep" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard only contains the data &#xD;    for the dates we need (YTD last year and this yesr)&#xD;*/&#xD;WITH find_max_year AS      -- get the current year&#xD;    (SELECT max(swd_year) AS max_year &#xD;	FROM 	sales_monthly_agg_dashboard),&#xD;find_sales_mgr AS&#xD;	(SELECT	sales_regn_mngr AS sales_mgr&#xD;	FROM	sales_dim&#xD;	WHERE	s_trid LIKE ${salesRep}),&#xD;find_sales_terr AS&#xD;	(SELECT s_trid AS sales_terr, sales_rep&#xD;	FROM	sales_dim, find_sales_mgr&#xD;	WHERE	sales_regn_mngr = sales_mgr),&#xD;top_collections AS&#xD;	(SELECT	c3_0 as Collection,&#xD;		sum(saexp) as total_sales,&#xD;		sum(saexp - secst) as total_margin&#xD;	FROM&#xD;		sales_monthly_agg_dashboard, product_dim, customer, &#xD;		find_sales_terr, find_max_year&#xD;	WHERE   &#xD;		swd_year = max_year&#xD;		AND souom != 'C' AND souom != 'J'&#xD;		AND slitm = product_id&#xD;		AND s_shan = sshan&#xD;		AND s_trid = sales_terr&#xD;		AND prod_top like '%Moulding%'&#xD;		AND	((c3_2 LIKE 'Wood%' AND c3_3 NOT LIKE 'Other%') -- branded wood&#xD;			OR (prod_family LIKE '%Arq%') -- arqadia&#xD;			OR (c3_2 LIKE 'Metal%')) -- metal&#xD;	GROUP BY Collection&#xD;	ORDER BY total_sales DESC NULLS LAST LIMIT 10),&#xD;cross_ref AS&#xD;	(SELECT Collection, sales_rep&#xD;	FROM	find_sales_terr CROSS JOIN top_collections),&#xD;sales_info AS &#xD;	(SELECT	sales_rep, Collection,&#xD;		sum(saexp) as total_sales,&#xD;		sum(saexp - secst) as total_margin&#xD;	FROM 	top_collections, sales_monthly_agg_dashboard, product_dim, &#xD;		find_sales_terr, customer, find_max_year&#xD;	WHERE 	Collection = c3_0&#xD;	AND 	product_id = slitm&#xD;	AND 	sshan = s_shan&#xD;	AND 	s_trid = sales_terr&#xD;	AND 	swd_year = max_year&#xD;	GROUP BY Collection, sales_rep)&#xD;&#xD;SELECT 	Collection, sales_rep,&#xD;	ABS(CASE total_sales WHEN 0 THEN 0 &#xD;	ELSE total_margin/total_sales END) AS mrg_pct&#xD;	FROM cross_ref LEFT JOIN sales_info &#xD;	USING (Collection, sales_rep)&#xD;UNION&#xD;SELECT 	Collection, 'Avg' as sales_rep,  &#xD;	(sum(total_margin)/sum(total_sales)) AS mrg_pct&#xD;	FROM sales_info&#xD;	GROUP BY Collection&#xD;ORDER BY Collection, sales_rep</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_top_acc_margin"
+               id="get_top_acc_margin"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesRep" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+WITH find_max_year AS      -- get the current year&#xD;
+    (SELECT max(swd_year) AS max_year &#xD;
+	FROM 	sales_monthly_agg_dashboard),&#xD;
+find_sales_mgr AS&#xD;
+	(SELECT	sales_regn_mngr AS sales_mgr&#xD;
+	FROM	sales_dim&#xD;
+	WHERE	s_trid LIKE ${salesRep}),&#xD;
+find_sales_terr AS&#xD;
+	(SELECT s_trid AS sales_terr, sales_rep&#xD;
+	FROM	sales_dim, find_sales_mgr&#xD;
+	WHERE	sales_regn_mngr = sales_mgr),&#xD;
+glass_info AS&#xD;
+	(SELECT	distinct product_id AS glass_product_id&#xD;
+	FROM 	product_dim&#xD;
+	WHERE	prod_top LIKE 'Access%'&#xD;
+	AND	c3_2 LIKE 'Glaz%'&#xD;
+	AND	(prod_category LIKE '%useum'&#xD;
+		OR prod_category LIKE '%onservation%lear%')&#xD;
+	),&#xD;
+foam_info AS&#xD;
+	(SELECT distinct u_litm AS foam_product_id&#xD;
+	FROM product&#xD;
+	WHERE u_srp2dsc LIKE '%FOAM%'),	&#xD;
+product_info AS&#xD;
+	(SELECT product_id, c3_0&#xD;
+	FROM 	product_dim, glass_info, foam_info&#xD;
+	WHERE	product_id = glass_product_id&#xD;
+		OR product_id = foam_product_id&#xD;
+	ORDER BY product_id),&#xD;
+top_collections AS&#xD;
+	(SELECT	c3_0 as Collection,&#xD;
+		sum(saexp) as total_sales,&#xD;
+		sum(saexp - secst) as total_margin&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard, product_info, customer, &#xD;
+		find_sales_terr, find_max_year&#xD;
+	WHERE   &#xD;
+		s_shan = sshan&#xD;
+		AND s_trid = sales_terr&#xD;
+		AND slitm = product_id&#xD;
+	GROUP BY Collection&#xD;
+	ORDER BY total_sales DESC NULLS LAST LIMIT 10),&#xD;
+cross_ref AS&#xD;
+	(SELECT Collection, sales_rep&#xD;
+	FROM	find_sales_terr CROSS JOIN top_collections),&#xD;
+sales_info AS &#xD;
+	(SELECT	sales_rep, Collection,&#xD;
+		sum(saexp) as total_sales,&#xD;
+		sum(saexp - secst) as total_margin&#xD;
+	FROM 	top_collections, sales_monthly_agg_dashboard, product_dim, &#xD;
+		find_sales_terr, customer, find_max_year&#xD;
+	WHERE 	Collection = c3_0&#xD;
+	AND 	product_id = slitm&#xD;
+	AND 	sshan = s_shan&#xD;
+	AND 	s_trid = sales_terr&#xD;
+	AND 	swd_year = max_year&#xD;
+	GROUP BY Collection, sales_rep)&#xD;
+&#xD;
+SELECT 	Collection, sales_rep,&#xD;
+	ABS(CASE total_sales WHEN 0 THEN 0 &#xD;
+	ELSE total_margin/total_sales END) AS mrg_pct&#xD;
+	FROM cross_ref LEFT JOIN sales_info &#xD;
+	USING (Collection, sales_rep)&#xD;
+UNION&#xD;
+SELECT 	Collection, 'Avg' as sales_rep,  &#xD;
+	(sum(total_margin)/sum(total_sales)) AS mrg_pct&#xD;
+	FROM sales_info&#xD;
+	GROUP BY Collection&#xD;
+ORDER BY Collection, sales_rep</Query>
+   </DataAccess>
+</CDADescriptor>

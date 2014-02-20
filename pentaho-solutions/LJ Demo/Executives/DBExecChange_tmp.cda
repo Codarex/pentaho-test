@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDADescriptor>
+   <DataSources>
+      <Connection id="get_top_non_independents" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_top_independents" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_bot_non_independents" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_bot_independents" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_top_collect_non" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_top_collect_ind" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_under_collect_non" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_under_collect_ind" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_revenue_comp" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_revenue_comp_table" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+   </DataSources>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_top_non_independents"
+               id="get_top_non_independents"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+WITH top_customer AS&#xD;
+    (SELECT	sshan as CustNo, &#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard2, customer &#xD;
+	WHERE        &#xD;
+		sshan = s_shan&#xD;
+		AND s_grp1 = 'C'&#xD;
+		AND s_trid != '696'&#xD;
+		AND s_deact_ds NOT LIKE '%D%'&#xD;
+	GROUP BY CustNo&#xD;
+	ORDER BY CurrentSales DESC NULLS LAST LIMIT 10)&#xD;
+SELECT 	s_alph as Customer, CurrentSales, LastYear&#xD;
+FROM	top_customer , customer&#xD;
+where 	CustNo = s_shan&#xD;
+order by CurrentSales ASC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_top_independents"
+               id="get_top_independents"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+WITH top_customer AS&#xD;
+    (SELECT    sshan as CustNo, &#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard2, customer &#xD;
+	WHERE        &#xD;
+		sshan = s_shan&#xD;
+		AND s_grp1 = 'I'&#xD;
+		AND s_trid != '696'&#xD;
+		AND s_deact_ds NOT LIKE '%D%'&#xD;
+	GROUP BY CustNo&#xD;
+	ORDER BY CurrentSales DESC NULLS LAST LIMIT 10)&#xD;
+SELECT 	s_alph as Customer, CurrentSales, LastYear&#xD;
+FROM	top_customer , customer&#xD;
+where 	CustNo = s_shan&#xD;
+order by CurrentSales ASC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_bot_non_independents"
+               id="get_bot_non_independents"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+WITH cust_summary AS&#xD;
+    (SELECT	sshan as CustNo, &#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard2, customer&#xD;
+	WHERE	sshan = s_shan&#xD;
+		AND s_grp1 = 'C'&#xD;
+		AND s_trid != '696'&#xD;
+		AND s_deact_ds NOT LIKE '%D%'&#xD;
+	GROUP BY CustNo),&#xD;
+top_ten AS&#xD;
+	(SELECT CustNo, CurrentSales, LastYear, (CurrentSales - LastYear) as SalesDiff&#xD;
+	FROM	cust_summary&#xD;
+	ORDER BY SalesDiff ASC NULLS LAST LIMIT 10)&#xD;
+&#xD;
+SELECT 	s_alph as Customer, CurrentSales, LastYear&#xD;
+FROM	top_ten, customer &#xD;
+WHERE 	CustNo = s_shan&#xD;
+ORDER BY SalesDiff DESC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_bot_independents"
+               id="get_bot_independents"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+WITH cust_summary AS&#xD;
+    (SELECT	sshan as CustNo, &#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard2, customer&#xD;
+	WHERE	sshan = s_shan&#xD;
+		AND s_grp1 = 'I'&#xD;
+		AND s_trid != '696'&#xD;
+		AND s_deact_ds NOT LIKE '%D%'&#xD;
+	GROUP BY CustNo),&#xD;
+top_ten AS&#xD;
+	(SELECT CustNo, CurrentSales, LastYear, (CurrentSales - LastYear) as SalesDiff&#xD;
+	FROM	cust_summary&#xD;
+	ORDER BY SalesDiff ASC NULLS LAST LIMIT 10)&#xD;
+&#xD;
+SELECT 	s_alph as Customer, CurrentSales, LastYear&#xD;
+FROM	top_ten, customer &#xD;
+WHERE 	CustNo = s_shan&#xD;
+ORDER BY SalesDiff DESC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_top_collect_non"
+               id="get_top_collect_non"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+WITH top_collections AS&#xD;
+    (SELECT	c3_0 as Collection, &#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard2, product_dim, customer&#xD;
+	WHERE    &#xD;
+		slitm = product_id&#xD;
+		AND sshan = s_shan&#xD;
+		AND s_grp1 = 'C'&#xD;
+		AND s_trid != '696'&#xD;
+		AND s_deact_ds NOT LIKE '%D%'&#xD;
+	GROUP BY Collection&#xD;
+	ORDER BY CurrentSales DESC NULLS LAST LIMIT 10)&#xD;
+&#xD;
+SELECT Collection, CurrentSales, LastYear&#xD;
+FROM top_collections&#xD;
+ORDER BY CurrentSales ASC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_top_collect_ind"
+               id="get_top_collect_ind"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+WITH top_collections AS&#xD;
+    (SELECT	c3_0 as Collection, &#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard2, product_dim, customer&#xD;
+	WHERE    &#xD;
+		slitm = product_id&#xD;
+		AND sshan = s_shan&#xD;
+		AND s_grp1 = 'I'&#xD;
+		AND s_trid != '696'&#xD;
+		AND s_deact_ds NOT LIKE '%D%'&#xD;
+	GROUP BY Collection&#xD;
+	ORDER BY CurrentSales DESC NULLS LAST LIMIT 10)&#xD;
+&#xD;
+SELECT Collection, CurrentSales, LastYear&#xD;
+FROM top_collections&#xD;
+ORDER BY CurrentSales ASC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_under_collect_non"
+               id="get_under_collect_non"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+SELECT Collection, CurrentSales, LastYear&#xD;
+FROM&#xD;
+(SELECT Collection, CurrentSales, LastYear, (CurrentSales - LastYear) as SalesDiff&#xD;
+FROM&#xD;
+(select     c3_0 as Collection, &#xD;
+    sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+	sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+from sales_monthly_agg_dashboard2, product_dim, customer&#xD;
+where 	slitm = product_id&#xD;
+	AND sshan = s_shan&#xD;
+	AND s_grp1 = 'C'&#xD;
+	AND s_trid != '696'&#xD;
+	AND s_deact_ds NOT LIKE '%D%'&#xD;
+group by Collection) as q1&#xD;
+ORDER BY SalesDiff ASC NULLS LAST LIMIT 10) as q2&#xD;
+ORDER BY SalesDiff DESC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_under_collect_ind"
+               id="get_under_collect_ind"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+SELECT Collection, CurrentSales, LastYear&#xD;
+FROM&#xD;
+(SELECT Collection, CurrentSales, LastYear, (CurrentSales - LastYear) as SalesDiff&#xD;
+FROM&#xD;
+(select     c3_0 as Collection, &#xD;
+    sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+	sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+from sales_monthly_agg_dashboard2, product_dim, customer&#xD;
+where 	slitm = product_id&#xD;
+	AND sshan = s_shan&#xD;
+	AND s_grp1 = 'I'&#xD;
+	AND s_trid != '696'&#xD;
+	AND s_deact_ds NOT LIKE '%D%'&#xD;
+group by Collection) as q1&#xD;
+ORDER BY SalesDiff ASC NULLS LAST LIMIT 10) as q2&#xD;
+ORDER BY SalesDiff DESC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_revenue_comp"
+               id="get_revenue_comp"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>/* NOTE: No date WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+(&#xD;
+SELECT&#xD;
+	'Profit' as SERIES,&#xD;
+	sum(case swd_year when 2013 then saexp - secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp - secst end) as LastYear&#xD;
+	&#xD;
+FROM	sales_monthly_agg_dashboard2&#xD;
+)&#xD;
+UNION ALL&#xD;
+(&#xD;
+SELECT&#xD;
+	'Cost' as SERIES,&#xD;
+	sum(case swd_year when 2013 then secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then secst end) as LastYear&#xD;
+	&#xD;
+FROM	sales_monthly_agg_dashboard2&#xD;
+)&#xD;
+UNION ALL &#xD;
+(&#xD;
+SELECT&#xD;
+	'Revenue' as SERIES,&#xD;
+	sum(case swd_year when 2013 then saexp end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	&#xD;
+FROM 	sales_monthly_agg_dashboard2&#xD;
+)</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_revenue_comp_table"
+               id="get_revenue_comp_table"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>/* NOTE: No date WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+(&#xD;
+SELECT&#xD;
+    'Revenue' as SERIES,&#xD;
+	sum(case swd_year when 2013 then saexp end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	&#xD;
+FROM 	sales_monthly_agg_dashboard2&#xD;
+)&#xD;
+UNION ALL&#xD;
+(&#xD;
+SELECT&#xD;
+	'Cost' as SERIES,&#xD;
+	sum(case swd_year when 2013 then secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then secst end) as LastYear&#xD;
+	&#xD;
+FROM	sales_monthly_agg_dashboard2&#xD;
+)&#xD;
+UNION ALL &#xD;
+(&#xD;
+SELECT&#xD;
+    'Profit' as SERIES,&#xD;
+	sum(case swd_year when 2013 then saexp - secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp - secst end) as LastYear&#xD;
+	&#xD;
+FROM	sales_monthly_agg_dashboard2&#xD;
+)</Query>
+   </DataAccess>
+</CDADescriptor>

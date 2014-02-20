@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDADescriptor>
+   <DataSources>
+      <Connection id="get_all_years" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_top_customers" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_top_families" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_revenue_comp" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+   </DataSources>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_all_years"
+               id="get_all_years"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>select distinct year from date_defs &#xD;
+where month_start_date between '2010-01-01' AND '2013-07-01'&#xD;
+order by year;</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_top_customers"
+               id="get_top_customers"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT s_alph as Customer, CurrentSales, LastYear&#xD;
+FROM &#xD;
+(SELECT&#xD;
+    sshan as CustNo, &#xD;
+	sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+	sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+FROM&#xD;
+    sales_monthly    &#xD;
+WHERE        &#xD;
+	( (month_start_date between '2012-01-01' AND '2012-04-01')&#xD;
+        OR (month_start_date between '2013-01-01' AND '2013-04-01'))&#xD;
+GROUP BY CustNo&#xD;
+ORDER BY CurrentSales DESC NULLS LAST LIMIT 10) as q1, customer&#xD;
+where CustNo = s_shan&#xD;
+order by CurrentSales ASC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_top_families"
+               id="get_top_families"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>WITH top_collections AS (&#xD;
+    select 	c3_0 as Collection, sum(saexp) as CurrentSales	&#xD;
+	from sales_monthly, product_dim&#xD;
+	where 	slitm = product_id&#xD;
+		AND (month_start_date between '2013-01-01' AND '2013-04-01')&#xD;
+	group by Collection&#xD;
+	order by CurrentSales DESC NULLS LAST limit 10),&#xD;
+     last_year_sales AS (&#xD;
+	select 	c3_0, sum(saexp) as LastYear	&#xD;
+	from sales_monthly, product_dim&#xD;
+	where 	c3_0 IN (select Collection from top_collections)&#xD;
+		AND slitm = product_id&#xD;
+		AND (month_start_date between '2012-01-01' AND '2012-04-01')&#xD;
+	group by c3_0)&#xD;
+SELECT Collection, CurrentSales, LastYear&#xD;
+FROM top_collections, last_year_sales&#xD;
+WHERE Collection = c3_0&#xD;
+ORDER BY CurrentSales ASC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_revenue_comp"
+               id="get_revenue_comp"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>(&#xD;
+SELECT&#xD;
+    'Profit' as SERIES,&#xD;
+	sum(case swd_year when 2013 then saexp - secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp - secst end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly&#xD;
+    WHERE&#xD;
+        (month_start_date between '2012-01-01' AND '2012-04-01')&#xD;
+    OR  (month_start_date between '2013-01-01' AND '2013-04-01')&#xD;
+)&#xD;
+UNION ALL&#xD;
+(&#xD;
+SELECT&#xD;
+	'Cost' as SERIES,&#xD;
+	sum(case swd_year when 2013 then secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then secst end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly&#xD;
+    WHERE&#xD;
+        (month_start_date between '2012-01-01' AND '2012-04-01')&#xD;
+    OR  (month_start_date between '2013-01-01' AND '2013-04-01')&#xD;
+)&#xD;
+UNION ALL &#xD;
+(&#xD;
+SELECT&#xD;
+	'Revenue' as SERIES,&#xD;
+	sum(case swd_year when 2013 then saexp end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly&#xD;
+    WHERE&#xD;
+        (month_start_date between '2012-01-01' AND '2012-04-01')&#xD;
+    OR  (month_start_date between '2013-01-01' AND '2013-04-01')&#xD;
+)</Query>
+   </DataAccess>
+</CDADescriptor>

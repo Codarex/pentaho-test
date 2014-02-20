@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDADescriptor>
+   <DataSources>
+      <Connection id="get_date_range" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_sales_mgr" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_top_collection_wm" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_top_collection_acc" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_under_collection_wm" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_under_collection_acc" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_wm_discounts_by_rep" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_acc_discounts_by_rep" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+   </DataSources>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_date_range"
+               id="get_date_range"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>with find_max_year AS&#xD;
+    (SELECT max(swd_year) AS max_year &#xD;
+	FROM 	sales_monthly_agg_dashboard)&#xD;
+&#xD;
+SELECT	min(month_start_date), max(month_start_date)&#xD;
+FROM	sales_monthly_agg_dashboard, find_max_year&#xD;
+WHERE 	swd_year = max_year</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_sales_mgr"
+               id="get_sales_mgr"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT distinct sales_regn_mngr&#xD;
+FROM sales_dim&#xD;
+WHERE sales_regn_mngr = 'Dave Modean'</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_top_collection_wm"
+               id="get_top_collection_wm"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesManager" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+    -- get the top collections&#xD;
+WITH top_collections AS&#xD;
+	(SELECT	c3_0 as Collection, &#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard2, product_dim, customer, sales_dim&#xD;
+	WHERE    &#xD;
+		slitm = product_id&#xD;
+		AND c3_2 like 'Wood Moulding'&#xD;
+		AND s_shan = sshan&#xD;
+		AND customer.s_trid = sales_dim.s_trid&#xD;
+		AND sales_regn_mngr LIKE ${salesManager}&#xD;
+	GROUP BY Collection&#xD;
+	ORDER BY CurrentSales DESC NULLS LAST LIMIT 10)&#xD;
+&#xD;
+SELECT Collection, CurrentSales, LastYear&#xD;
+FROM top_collections&#xD;
+ORDER BY CurrentSales ASC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_top_collection_acc"
+               id="get_top_collection_acc"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesManager" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+    -- get the top collections&#xD;
+WITH top_collections AS&#xD;
+	(SELECT	c3_0 as Collection, &#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard2, product_dim, customer, sales_dim&#xD;
+	WHERE    &#xD;
+		slitm = product_id&#xD;
+		AND (prod_top like 'Accessories'&#xD;
+             OR prod_top like 'Artaissance')&#xD;
+		AND s_shan = sshan&#xD;
+		AND customer.s_trid = sales_dim.s_trid&#xD;
+		AND sales_regn_mngr LIKE ${salesManager}&#xD;
+	GROUP BY Collection&#xD;
+	ORDER BY CurrentSales DESC NULLS LAST LIMIT 10)&#xD;
+&#xD;
+SELECT Collection, CurrentSales, LastYear&#xD;
+FROM top_collections&#xD;
+ORDER BY CurrentSales ASC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_under_collection_wm"
+               id="get_under_collection_wm"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesManager" type="String"/>
+      </Parameters>
+      <Query>SELECT    Collection, CurrentSales, LastYear&#xD;
+FROM&#xD;
+	(SELECT Collection, CurrentSales, LastYear, (CurrentSales - LastYear) as SalesDiff&#xD;
+	FROM&#xD;
+		(select	c3_0 as Collection, &#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+		from sales_monthly_agg_dashboard, product_dim, customer, sales_dim&#xD;
+		where 	slitm = product_id&#xD;
+		AND 	c3_2 like 'Wood Moulding'&#xD;
+		AND	s_shan = sshan&#xD;
+		AND	customer.s_trid = sales_dim.s_trid&#xD;
+		AND   sales_regn_mngr LIKE ${salesManager}&#xD;
+		group by Collection) as q1&#xD;
+	ORDER BY SalesDiff ASC NULLS LAST LIMIT 10) as q2&#xD;
+ORDER BY SalesDiff DESC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_under_collection_acc"
+               id="get_under_collection_acc"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesManager" type="String"/>
+      </Parameters>
+      <Query>SELECT    Collection, CurrentSales, LastYear&#xD;
+FROM&#xD;
+	(SELECT Collection, CurrentSales, LastYear, (CurrentSales - LastYear) as SalesDiff&#xD;
+	FROM&#xD;
+		(select	c3_0 as Collection, &#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+		from sales_monthly_agg_dashboard, product_dim, customer, sales_dim&#xD;
+		where 	slitm = product_id&#xD;
+		AND 	(prod_top like 'Accessories'&#xD;
+             OR prod_top like 'Artaissance')&#xD;
+		AND	s_shan = sshan&#xD;
+		AND	customer.s_trid = sales_dim.s_trid&#xD;
+		AND   sales_regn_mngr LIKE ${salesManager}&#xD;
+		group by Collection) as q1&#xD;
+	ORDER BY SalesDiff ASC NULLS LAST LIMIT 10) as q2&#xD;
+ORDER BY SalesDiff DESC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_wm_discounts_by_rep"
+               id="get_wm_discounts_by_rep"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesManager" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+&#xD;
+WITH find_max_year AS&#xD;
+    (SELECT max(swd_year) AS max_year &#xD;
+    FROM 	sales_monthly_agg_dashboard),&#xD;
+&#xD;
+	-- get the sales terr&#xD;
+sales_terr AS&#xD;
+	(SELECT s_trid, sales_rep&#xD;
+	FROM	sales_dim&#xD;
+	WHERE	sales_regn_mngr LIKE ${salesManager}&#xD;
+	ORDER BY s_trid),&#xD;
+&#xD;
+	-- get the top collections&#xD;
+top_collection AS&#xD;
+	(SELECT	c3_0 as Collection, sum(saexp) as CurrentSales    &#xD;
+	FROM 	sales_monthly_agg_dashboard, product_dim, customer, sales_terr, find_max_year&#xD;
+	WHERE 	slitm = product_id&#xD;
+		AND c3_2 like 'Wood Moulding'&#xD;
+		AND s_shan = sshan&#xD;
+		AND customer.s_trid = sales_terr.s_trid&#xD;
+		AND swd_year = max_year&#xD;
+	group by Collection&#xD;
+	order by CurrentSales DESC NULLS LAST limit 10),&#xD;
+&#xD;
+pricing_info AS (&#xD;
+	SELECT	sales_rep, Collection, &#xD;
+		sum(total_list_price) as listPrice, sum(total_selling_price) as discountPrice&#xD;
+	FROM 	top_collection, sales_monthly_agg_dashboard, product_dim, sales_terr, customer, find_max_year&#xD;
+	WHERE 	Collection = c3_0&#xD;
+	AND 	product_id = slitm&#xD;
+	AND 	sshan = s_shan&#xD;
+	AND 	customer.s_trid = sales_terr.s_trid&#xD;
+	AND 	swd_year = max_year&#xD;
+	GROUP BY Collection, sales_rep&#xD;
+	ORDER BY Collection, sales_rep),&#xD;
+&#xD;
+cross_ref AS(&#xD;
+	SELECT 	Collection, sales_rep&#xD;
+	FROM	sales_terr CROSS JOIN top_collection&#xD;
+	)&#xD;
+&#xD;
+SELECT 	Collection, sales_rep,&#xD;
+	ABS(CASE listPrice WHEN 0 THEN 0 &#xD;
+	ELSE (listPrice - discountPrice)/listPrice END) AS avg_disc&#xD;
+	FROM cross_ref LEFT JOIN pricing_info &#xD;
+	USING (Collection, sales_rep)&#xD;
+UNION&#xD;
+SELECT 	Collection, '(ALL)' as sales_rep, &#xD;
+	(sum(listPrice) - sum(discountPrice))/sum(listPrice) AS avg_disc&#xD;
+	FROM pricing_info&#xD;
+	GROUP BY Collection&#xD;
+ORDER BY Collection, sales_rep</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_acc_discounts_by_rep"
+               id="get_acc_discounts_by_rep"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesManager" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+WITH find_max_year AS&#xD;
+    (SELECT max(swd_year) AS max_year &#xD;
+	FROM 	sales_monthly_agg_dashboard),&#xD;
+&#xD;
+	-- get the sales terr&#xD;
+sales_terr AS&#xD;
+	(SELECT s_trid, sales_rep&#xD;
+	FROM	sales_dim&#xD;
+	WHERE	sales_regn_mngr LIKE ${salesManager}&#xD;
+	ORDER BY s_trid),&#xD;
+&#xD;
+	-- get the top collections&#xD;
+top_collection AS&#xD;
+	(SELECT	c3_0 as Collection, sum(saexp) as CurrentSales    &#xD;
+	FROM 	sales_monthly_agg_dashboard, product_dim, customer, sales_terr, find_max_year&#xD;
+	WHERE 	slitm = product_id&#xD;
+		AND (prod_top like 'Accessories'&#xD;
+			OR prod_top like 'Artaissance')&#xD;
+		AND s_shan = sshan&#xD;
+		AND customer.s_trid = sales_terr.s_trid&#xD;
+		AND swd_year = max_year&#xD;
+	group by Collection&#xD;
+	order by CurrentSales DESC NULLS LAST limit 10),&#xD;
+&#xD;
+pricing_info AS (&#xD;
+	SELECT	sales_rep, Collection, &#xD;
+		sum(total_list_price) as listPrice, sum(total_selling_price) as discountPrice&#xD;
+	FROM 	top_collection, sales_monthly_agg_dashboard, product_dim, sales_terr, customer, find_max_year&#xD;
+	WHERE 	Collection = c3_0&#xD;
+	AND 	product_id = slitm&#xD;
+	AND 	sshan = s_shan&#xD;
+	AND 	customer.s_trid = sales_terr.s_trid&#xD;
+	AND 	swd_year = max_year&#xD;
+	GROUP BY Collection, sales_rep&#xD;
+	ORDER BY Collection, sales_rep),&#xD;
+&#xD;
+cross_ref AS(&#xD;
+	SELECT 	Collection, sales_rep&#xD;
+	FROM	sales_terr CROSS JOIN top_collection&#xD;
+	)&#xD;
+&#xD;
+SELECT 	Collection, sales_rep,&#xD;
+	ABS(CASE listPrice WHEN 0 THEN 0 &#xD;
+	ELSE (listPrice - discountPrice)/listPrice END) AS avg_disc&#xD;
+	FROM cross_ref LEFT JOIN pricing_info &#xD;
+	USING (Collection, sales_rep)&#xD;
+UNION&#xD;
+SELECT 	Collection, '(ALL)' as sales_rep, &#xD;
+	(sum(listPrice) - sum(discountPrice))/sum(listPrice) AS avg_disc&#xD;
+	FROM pricing_info&#xD;
+	GROUP BY Collection&#xD;
+ORDER BY Collection, sales_rep</Query>
+   </DataAccess>
+</CDADescriptor>

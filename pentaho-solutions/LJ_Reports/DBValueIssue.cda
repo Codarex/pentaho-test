@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDADescriptor>
+   <DataSources>
+      <Connection id="get_revenue_comp" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+   </DataSources>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_revenue_comp"
+               id="get_revenue_comp"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>(&#xD;
+SELECT&#xD;
+    'Profit' as SERIES,&#xD;
+	sum(case swd_year when 2013 then saexp - secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp - secst end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly&#xD;
+    WHERE&#xD;
+        (month_start_date between '2012-01-01' AND '2012-04-01')&#xD;
+    OR  (month_start_date between '2013-01-01' AND '2013-04-01')&#xD;
+)&#xD;
+UNION ALL&#xD;
+(&#xD;
+SELECT&#xD;
+	'Cost' as SERIES,&#xD;
+	sum(case swd_year when 2013 then secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then secst end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly&#xD;
+    WHERE&#xD;
+        (month_start_date between '2012-01-01' AND '2012-04-01')&#xD;
+    OR  (month_start_date between '2013-01-01' AND '2013-04-01')&#xD;
+)&#xD;
+UNION ALL &#xD;
+(&#xD;
+SELECT&#xD;
+	'Revenue' as SERIES,&#xD;
+	sum(case swd_year when 2013 then saexp end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly&#xD;
+    WHERE&#xD;
+        (month_start_date between '2012-01-01' AND '2012-04-01')&#xD;
+    OR  (month_start_date between '2013-01-01' AND '2013-04-01')&#xD;
+)</Query>
+   </DataAccess>
+</CDADescriptor>

@@ -1,0 +1,66 @@
+<Schema name="MyTestSchema">
+  <Cube name="MyTestCube" visible="true" cache="true" enabled="true">
+    <Table name="sales_monthly" schema="public">
+    </Table>
+    <Dimension type="StandardDimension" visible="true" foreignKey="sshan" highCardinality="false" name="Customer">
+      <Hierarchy visible="true" hasAll="true">
+        <Table name="sold_to_customer_dim" schema="public">
+        </Table>
+        <Level name="Sales Region" visible="true" table="sold_to_customer_dim" column="sales_regn" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Territory" visible="true" table="sold_to_customer_dim" column="territory" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Ship to Customer Name" visible="true" table="sold_to_customer_dim" column="shipto" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Ship to Customer Nbr" visible="true" table="sold_to_customer_dim" column="cust_id" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="slitm" highCardinality="false" name="Product">
+      <Hierarchy visible="true" hasAll="true">
+        <Table name="product_dim" schema="public">
+        </Table>
+        <Level name="Product Type" visible="true" column="c3_3" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Item Group" visible="true" column="c3_0" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Item" visible="true" column="product_id" type="String" internalType="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="TimeDimension" visible="true" foreignKey="month_start_date" highCardinality="false" name="Time">
+      <Hierarchy visible="true" hasAll="true">
+        <Table name="date_dim" schema="public">
+        </Table>
+        <Level name="Year" visible="true" column="year" type="Timestamp" uniqueMembers="true" levelType="TimeYears" hideMemberIf="Never">
+          <Annotations>
+            <Annotation name="AnalyzerDateFormat">
+              <![CDATA[[yyyy]]]>
+            </Annotation>
+          </Annotations>
+        </Level>
+        <Level name="Quarter" visible="true" column="quarter" type="String" internalType="String" uniqueMembers="false" levelType="TimeQuarters" hideMemberIf="Never">
+          <Annotations>
+            <Annotation name="AnalyzerDateFormat">
+              <![CDATA[[yyyy].[q]]]>
+            </Annotation>
+          </Annotations>
+        </Level>
+        <Level name="Month" visible="true" table="date_dim" column="month_start_date" type="Date" uniqueMembers="false" levelType="TimeMonths" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Measure name="Quantity" column="snqty" datatype="Numeric" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Sales" column="saexp" datatype="Integer" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Cost" column="sncst" datatype="Integer" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Invoice_Count" column="slitm" datatype="Integer" aggregator="count" visible="true">
+    </Measure>
+    <CalculatedMember name="Avg_Invoice_Sales" formula="[Measures].[Sales]/[Measures].[Invoice_Count]" dimension="Measures" visible="true">
+    </CalculatedMember>
+    <CalculatedMember name="GM$" formula="[Measures].[Sales]-[Measures].[Cost]" dimension="Measures" visible="true">
+    </CalculatedMember>
+  </Cube>
+</Schema>

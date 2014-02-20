@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDADescriptor>
+   <DataSources>
+      <Connection id="get_main_zips" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+   </DataSources>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_main_zips"
+               id="get_main_zips"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT sales_rep, latitude, longitude, currentYear, lastYear, sales_regn_mngr&#xD;
+FROM&#xD;
+(SELECT  s_trid,&#xD;
+    sum(case swd_year when 2013 then saexp end) as currentYear,&#xD;
+	sum(case swd_year when 2012 then saexp end) as lastYear&#xD;
+FROM sales_monthly, customer&#xD;
+WHERE s_shan = sshan&#xD;
+  AND ((month_start_date between '2012-01-01' AND '2012-04-01')&#xD;
+    OR  (month_start_date between '2013-01-01' AND '2013-04-01'))&#xD;
+GROUP BY s_trid) as salesSummary, sales_dim, terr_main_zip&#xD;
+WHERE terr_main_zip.terr_id = salesSummary.s_trid&#xD;
+AND salesSummary.s_trid = sales_dim.s_trid</Query>
+   </DataAccess>
+</CDADescriptor>
