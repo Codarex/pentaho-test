@@ -1,0 +1,777 @@
+{
+  "layout": {
+    "title": "CDF - Sample structure",
+    "rows": [
+      {
+        "id": "b9be9774-42be-c288-c024-0a5a88ed7f16",
+        "type": "LayoutResourceFile",
+        "typeDesc": "Resource",
+        "parent": "UnIqEiD",
+        "properties": [
+          {
+            "name": "name",
+            "value": "googlemap_api",
+            "type": "Id",
+            "order": 5,
+            "description": "Name",
+            "tooltip": "Name"
+          },
+          {
+            "name": "resourceFile",
+            "value": "https://maps.googleapis.com/maps/api/js?sensor=false",
+            "type": "ResourceFile",
+            "order": 18,
+            "description": "Resource file",
+            "tooltip": "Resource file to include"
+          },
+          {
+            "name": "resourceType",
+            "value": "Javascript",
+            "type": "Label",
+            "order": 19,
+            "description": "Type",
+            "tooltip": "Resource Type to include"
+          }
+        ]
+      },
+      {
+        "id": "130056eb-cf81-d722-245d-2da248b3927b",
+        "type": "LayoutResourceCode",
+        "typeDesc": "Resource",
+        "parent": "UnIqEiD",
+        "properties": [
+          {
+            "name": "name",
+            "value": "initializex",
+            "type": "Id",
+            "order": 5,
+            "description": "Name",
+            "tooltip": "Name"
+          },
+          {
+            "name": "resourceType",
+            "value": "Javascript",
+            "type": "Label",
+            "order": 19,
+            "description": "Type",
+            "tooltip": "Resource Type to include"
+          },
+          {
+            "name": "resourceCode",
+            "value": "var map;\r\nvar infoWindow = new google.maps.InfoWindow({});\r\nvar yellowColor = \"FFFF00\";\r\nvar redColor = \"FF0000\";\r\nvar greenColor = \"008000\";\r\nvar yellowPin = new google.maps.MarkerImage(\"http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|\" + yellowColor,\r\n        new google.maps.Size(21, 34),\r\n        new google.maps.Point(0,0),\r\n        new google.maps.Point(10, 34));\r\nvar redPin = new google.maps.MarkerImage(\"http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|\" + redColor,\r\n        new google.maps.Size(21, 34),\r\n        new google.maps.Point(0,0),\r\n        new google.maps.Point(10, 34));\r\nvar greenPin = new google.maps.MarkerImage(\"http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|\" + greenColor,\r\n        new google.maps.Size(21, 34),\r\n        new google.maps.Point(0,0),\r\n        new google.maps.Point(10, 34));\r\nfunction addCommas(nStr) {\r\n        nStr += '';\r\n\t\tx = nStr.split('.');\r\n\t\tx1 = x[0];\r\n\t\tx2 = x.length > 1 ? '.' + x[1] : '';\r\n\t\tvar rgx = /(\\d+)(\\d{3})/;\r\n\t\twhile (rgx.test(x1)) {\r\n\t\t\tx1 = x1.replace(rgx, '$1' + ',' + '$2');\r\n\t\t}\r\n\t\treturn x1 + x2;\r\n\t}\r\nfunction initialize() {\r\n        var mapOptions = {\r\n          center: new google.maps.LatLng(37.09024, -95.712891),\r\n          zoom: 4,\r\n          mapTypeId: google.maps.MapTypeId.ROADMAP\r\n        };\r\n        map = new google.maps.Map(document.getElementById(\"map_canvas\"),\r\n            mapOptions);\r\n      } \r\ngoogle.maps.event.addDomListener(window, 'load', initialize); \r\nfunction codeAddress(terr_name, latitude, longitude, currentYear, lastYear, manager, realization, discounting) {\r\n        var currentPin = greenPin;\r\n        var pinTitle = terr_name + ': ';\r\n        var salesChange = ((currentYear - lastYear)/currentYear)*100;\r\n        if (salesChange < 0) {\r\n            currentPin = redPin;\r\n        } else if (salesChange < 10) {\r\n            pinTitle = pinTitle + '+';\r\n            currentPin = yellowPin;\r\n        } else {\r\n            pinTitle = pinTitle + '+';\r\n        }\r\n        pinTitle = pinTitle + salesChange.toFixed(1) + '%';\r\n        var marker = new google.maps.Marker({\r\n            map: map,\r\n            icon: currentPin,\r\n            title: pinTitle,\r\n            position: new google.maps.LatLng(latitude, longitude)\r\n        });\r\n        google.maps.event.addListener(marker, 'click', function() {\r\n            infoWindow.setContent('<b>' + pinTitle + '</b></br>Manager: ' + manager + '</br><table style=\"width:100%;\"><tr><td>Current Year Sales:</td><td> $' + addCommas(currentYear.toFixed(0)) + '</td></tr><tr><td>Last Year Sales:</td><td> $' + addCommas(lastYear.toFixed(0)) + '</td></tr><tr><td>Pentration</td><td>75%</td></tr></table>');\r\n            infoWindow.open(map,marker);\r\n        });\r\n} \r\n//alert(Dashboards.context.user + ' ' + Dashboards.context.roles); ",
+            "type": "Resource",
+            "order": 19,
+            "description": "Resource code",
+            "tooltip": "Resource code to include"
+          }
+        ]
+      },
+      {
+        "id": "b2f35a1b-f286-325d-b8cd-aa6d4c4b4bb7",
+        "type": "LayoutResourceFile",
+        "typeDesc": "Resource",
+        "parent": "UnIqEiD",
+        "properties": [
+          {
+            "name": "name",
+            "value": "styles",
+            "type": "Id",
+            "order": 5,
+            "description": "Name",
+            "tooltip": "Name"
+          },
+          {
+            "name": "resourceFile",
+            "value": "${res:styles.css}",
+            "type": "ResourceFile",
+            "order": 18,
+            "description": "Resource file",
+            "tooltip": "Resource file to include"
+          },
+          {
+            "name": "resourceType",
+            "value": "Css",
+            "type": "Label",
+            "order": 19,
+            "description": "Type",
+            "tooltip": "Resource Type to include"
+          }
+        ]
+      },
+      {
+        "id": "b0c3f3b5-a2a7-aa90-af2a-baa6e4fa6915",
+        "type": "LayoutRow",
+        "typeDesc": "Row",
+        "parent": "UnIqEiD",
+        "properties": [
+          {
+            "name": "name",
+            "value": "info",
+            "type": "Id",
+            "order": 5,
+            "description": "Name",
+            "tooltip": "Name"
+          },
+          {
+            "name": "height",
+            "value": "",
+            "type": "Integer",
+            "order": 50,
+            "description": "Height",
+            "tooltip": "Element height, in pixels "
+          },
+          {
+            "name": "backgroundColor",
+            "value": "",
+            "type": "Color",
+            "order": 56,
+            "description": "BackgroundColor",
+            "classType": "advanced",
+            "tooltip": "Element background color"
+          },
+          {
+            "name": "roundCorners",
+            "value": "",
+            "type": "RoundCorners",
+            "order": 70,
+            "description": "Corners",
+            "tooltip": "Corners type"
+          },
+          {
+            "name": "textAlign",
+            "value": "",
+            "type": "TextAlign",
+            "order": 75,
+            "description": "Text Align",
+            "tooltip": "Text Align"
+          },
+          {
+            "name": "cssClass",
+            "value": "",
+            "type": "String",
+            "order": 80,
+            "description": "Css Class",
+            "tooltip": "Css Class to be used when this element is rendered"
+          }
+        ]
+      },
+      {
+        "id": "38872b2d-345f-8a97-87c0-eb534dee90f7",
+        "type": "LayoutColumn",
+        "typeDesc": "Column",
+        "parent": "b0c3f3b5-a2a7-aa90-af2a-baa6e4fa6915",
+        "properties": [
+          {
+            "name": "name",
+            "value": "info",
+            "type": "Id",
+            "order": 5,
+            "description": "Name",
+            "tooltip": "Name"
+          },
+          {
+            "name": "columnSpan",
+            "value": "24",
+            "type": "Integer",
+            "order": 30,
+            "description": "Span size",
+            "tooltip": "Column span size, numeric. The total must be 24"
+          },
+          {
+            "name": "columnPrepend",
+            "value": "",
+            "type": "Integer",
+            "order": 32,
+            "description": "Prepend size",
+            "tooltip": "Prepend size - optional"
+          },
+          {
+            "name": "columnAppend",
+            "value": "",
+            "type": "Integer",
+            "order": 33,
+            "description": "Append size",
+            "tooltip": "Append size - optional"
+          },
+          {
+            "name": "columnPrependTop",
+            "value": "false",
+            "type": "Boolean",
+            "order": 34,
+            "description": "Prepend gutter to top",
+            "tooltip": "Prepend space to the top of the element"
+          },
+          {
+            "name": "columnAppendBottom",
+            "value": "false",
+            "type": "Boolean",
+            "order": 35,
+            "description": "Prepend gutter to bottom",
+            "tooltip": "Prepend space to the bottom of the element"
+          },
+          {
+            "name": "columnBorder",
+            "value": "false",
+            "type": "Boolean",
+            "order": 36,
+            "description": "Right border",
+            "tooltip": "Generates a border between the columns"
+          },
+          {
+            "name": "columnBigBorder",
+            "value": "false",
+            "type": "Boolean",
+            "order": 37,
+            "description": "Big right border",
+            "tooltip": "Generates a border between the columns, "
+          },
+          {
+            "name": "height",
+            "value": "",
+            "type": "Integer",
+            "order": 50,
+            "description": "Height",
+            "tooltip": "Element height, in pixels "
+          },
+          {
+            "name": "backgroundColor",
+            "value": "",
+            "type": "Color",
+            "order": 56,
+            "description": "BackgroundColor",
+            "classType": "advanced",
+            "tooltip": "Element background color"
+          },
+          {
+            "name": "roundCorners",
+            "value": "",
+            "type": "RoundCorners",
+            "order": 70,
+            "description": "Corners",
+            "tooltip": "Corners type"
+          },
+          {
+            "name": "textAlign",
+            "value": "",
+            "type": "TextAlign",
+            "order": 75,
+            "description": "Text Align",
+            "tooltip": "Text Align"
+          },
+          {
+            "name": "cssClass",
+            "value": "",
+            "type": "String",
+            "order": 80,
+            "description": "Css Class",
+            "tooltip": "Css Class to be used when this element is rendered"
+          }
+        ]
+      },
+      {
+        "id": "c06f4612-156b-d26b-fb11-e80c02452257",
+        "type": "LayoutRow",
+        "typeDesc": "Row",
+        "parent": "38872b2d-345f-8a97-87c0-eb534dee90f7",
+        "properties": [
+          {
+            "name": "name",
+            "value": "header",
+            "type": "Id",
+            "order": 5,
+            "description": "Name",
+            "tooltip": "Name"
+          },
+          {
+            "name": "height",
+            "value": "",
+            "type": "Integer",
+            "order": 50,
+            "description": "Height",
+            "tooltip": "Element height, in pixels "
+          },
+          {
+            "name": "backgroundColor",
+            "value": "",
+            "type": "Color",
+            "order": 56,
+            "description": "BackgroundColor",
+            "classType": "advanced",
+            "tooltip": "Element background color"
+          },
+          {
+            "name": "roundCorners",
+            "value": "",
+            "type": "RoundCorners",
+            "order": 70,
+            "description": "Corners",
+            "tooltip": "Corners type"
+          },
+          {
+            "name": "textAlign",
+            "value": "",
+            "type": "TextAlign",
+            "order": 75,
+            "description": "Text Align",
+            "tooltip": "Text Align"
+          },
+          {
+            "name": "cssClass",
+            "value": "",
+            "type": "String",
+            "order": 80,
+            "description": "Css Class",
+            "tooltip": "Css Class to be used when this element is rendered"
+          }
+        ]
+      },
+      {
+        "id": "3b40e635-7325-fc3c-e463-7301e03ec546",
+        "type": "LayoutHtml",
+        "typeDesc": "Html",
+        "parent": "c06f4612-156b-d26b-fb11-e80c02452257",
+        "properties": [
+          {
+            "name": "name",
+            "value": "title",
+            "type": "Id",
+            "order": 5,
+            "description": "Name",
+            "tooltip": "Name"
+          },
+          {
+            "name": "html",
+            "value": "<h3>Performance by Sales Territory</h3> ",
+            "type": "Html",
+            "order": 15,
+            "description": "HTML",
+            "tooltip": "Html code to be added"
+          },
+          {
+            "name": "fontSize",
+            "value": "",
+            "type": "Integer",
+            "order": 49,
+            "description": "Font Size",
+            "classType": "advanced",
+            "tooltip": "Font size, in pixels "
+          },
+          {
+            "name": "color",
+            "value": "",
+            "type": "Color",
+            "order": 55,
+            "description": "Color",
+            "tooltip": "Element color"
+          },
+          {
+            "name": "cssClass",
+            "value": "",
+            "type": "String",
+            "order": 80,
+            "description": "Css Class",
+            "tooltip": "Css Class to be used when this element is rendered"
+          }
+        ]
+      },
+      {
+        "id": "2eb3383c-05ef-2d2b-e842-77eaeb5b9664",
+        "type": "LayoutRow",
+        "typeDesc": "Row",
+        "parent": "38872b2d-345f-8a97-87c0-eb534dee90f7",
+        "properties": [
+          {
+            "name": "name",
+            "value": "map_canvas",
+            "type": "Id",
+            "order": 5,
+            "description": "Name",
+            "tooltip": "Name"
+          },
+          {
+            "name": "height",
+            "value": "400",
+            "type": "Integer",
+            "order": 50,
+            "description": "Height",
+            "tooltip": "Element height, in pixels "
+          },
+          {
+            "name": "backgroundColor",
+            "value": "",
+            "type": "Color",
+            "order": 56,
+            "description": "BackgroundColor",
+            "classType": "advanced",
+            "tooltip": "Element background color"
+          },
+          {
+            "name": "roundCorners",
+            "value": "",
+            "type": "RoundCorners",
+            "order": 70,
+            "description": "Corners",
+            "tooltip": "Corners type"
+          },
+          {
+            "name": "textAlign",
+            "value": "",
+            "type": "TextAlign",
+            "order": 75,
+            "description": "Text Align",
+            "tooltip": "Text Align"
+          },
+          {
+            "name": "cssClass",
+            "value": "",
+            "type": "String",
+            "order": 80,
+            "description": "Css Class",
+            "tooltip": "Css Class to be used when this element is rendered"
+          }
+        ]
+      }
+    ]
+  },
+  "components": {
+    "rows": [
+      {
+        "id": "SCRIPT",
+        "name": "Scripts",
+        "type": "Label",
+        "typeDesc": "<i>Group</i>",
+        "parent": "UnIqEiD",
+        "properties": [
+          {
+            "name": "Group",
+            "value": "Scripts",
+            "type": "Label",
+            "description": "Group",
+            "tooltip": "Group"
+          }
+        ]
+      },
+      {
+        "id": "60f5e103-18f3-8910-456c-8788b7bcfcf6",
+        "type": "ComponentsFunction",
+        "typeDesc": "Function",
+        "parent": "SCRIPT",
+        "properties": [
+          {
+            "name": "name",
+            "value": "gmap_initialize",
+            "type": "Id",
+            "order": 5,
+            "description": "Name",
+            "tooltip": "Name"
+          },
+          {
+            "name": "javaScript",
+            "value": "function initialize() {\r\n        var mapOptions = {\r\n          center: new google.maps.LatLng(-34.397, 150.644),\r\n          zoom: 8,\r\n          mapTypeId: google.maps.MapTypeId.ROADMAP\r\n        };\r\n        var map = new google.maps.Map(document.getElementById(\"map-canvas\"),\r\n            mapOptions);\r\n      }\r\n      google.maps.event.addDomListener(window, 'load', initialize);",
+            "type": "JavaScript",
+            "order": 17,
+            "description": "Javascript code ",
+            "tooltip": "JavaScript code to be included"
+          }
+        ]
+      },
+      {
+        "id": "OTHERCOMPONENTS",
+        "name": "Other components",
+        "type": "Label",
+        "typeDesc": "<i>Group</i>",
+        "parent": "UnIqEiD",
+        "properties": [
+          {
+            "name": "Group",
+            "value": "Other components",
+            "type": "Label",
+            "description": "Group",
+            "tooltip": "Group"
+          }
+        ]
+      },
+      {
+        "id": "088b3f02-9a01-eb93-9c81-6a8101d9a6b1",
+        "type": "ComponentsQuery",
+        "typeDesc": "Query Component",
+        "parent": "OTHERCOMPONENTS",
+        "properties": [
+          {
+            "name": "name",
+            "value": "zip_query",
+            "type": "Id",
+            "order": 5,
+            "description": "Name",
+            "tooltip": "Name"
+          },
+          {
+            "name": "listeners",
+            "value": "['${p:Select options}']",
+            "type": "Listeners",
+            "order": 13,
+            "description": "Listeners",
+            "tooltip": "Parameters to listen to"
+          },
+          {
+            "name": "xActionArrayParameter",
+            "value": "[]",
+            "type": "ValuesArray",
+            "order": 40,
+            "description": "Parameters",
+            "tooltip": " Parameters to pass to the component"
+          },
+          {
+            "name": "resultvar",
+            "value": "",
+            "type": "Result",
+            "order": 40,
+            "description": "Result Var",
+            "tooltip": "Where the query result will be stored"
+          },
+          {
+            "name": "dataSource",
+            "type": "Datasource",
+            "value": "get_main_zips",
+            "description": "Datasource",
+            "tooltip": "DataSource to be used in this selector",
+            "order": 43
+          },
+          {
+            "name": "refreshPeriod",
+            "value": "",
+            "type": "Integer",
+            "order": 50,
+            "description": "Refresh Period",
+            "classType": "advanced",
+            "tooltip": "Time interval (in seconds) to refresh the component. If 0 or not set component won't refresh."
+          },
+          {
+            "name": "priority",
+            "value": 5,
+            "type": "Integer",
+            "order": 50,
+            "description": "Priority",
+            "classType": "advanced",
+            "tooltip": "Priority for component execution component. Lower values have higher priority"
+          },
+          {
+            "name": "htmlObject",
+            "value": "${p:map_canvas}",
+            "type": "HtmlObject",
+            "order": 90,
+            "description": "HtmlObject",
+            "tooltip": "HtmlObject to prompt"
+          },
+          {
+            "name": "executeAtStart",
+            "value": "true",
+            "type": "Boolean",
+            "order": 91,
+            "description": "Execute at start",
+            "classType": "advanced",
+            "tooltip": "Execute at start?"
+          },
+          {
+            "name": "preExecution",
+            "value": "",
+            "type": "JavaScript",
+            "order": 92,
+            "description": "Pre Execution",
+            "classType": "advanced",
+            "tooltip": "Function to be executed before the component is updated"
+          },
+          {
+            "name": "postExecution",
+            "value": "",
+            "type": "JavaScript",
+            "order": 93,
+            "description": "Post Execution",
+            "classType": "advanced",
+            "tooltip": "Function to be executed after the component is updated"
+          },
+          {
+            "name": "postFetch",
+            "value": "function f(data){\n    for (var i=0; i < data.resultset.length; i++) {\n        codeAddress(data.resultset[i][0], data.resultset[i][1],data.resultset[i][2], data.resultset[i][3], data.resultset[i][4], data.resultset[i][5], .75, .80);\n    }\n}",
+            "type": "JavaScript",
+            "order": 93,
+            "description": "Post Fetch",
+            "classType": "advanced",
+            "tooltip": "Code executed after this component's data is fetched from the server"
+          },
+          {
+            "name": "preChange",
+            "value": "",
+            "type": "JavaScript",
+            "order": 94,
+            "description": "Pre Change",
+            "classType": "advanced",
+            "tooltip": "Function to be executed before the component is changed. It's a function of the type function(value){return value}, and can be used for validation"
+          },
+          {
+            "name": "postChange",
+            "value": "",
+            "type": "JavaScript",
+            "order": 95,
+            "description": "Post Change",
+            "classType": "advanced",
+            "tooltip": "Function to be executed after the component is changed. It's a function of the type function(value){...}"
+          },
+          {
+            "name": "tooltip",
+            "value": "",
+            "type": "Html",
+            "order": 99,
+            "description": "Tooltip",
+            "classType": "advanced",
+            "tooltip": "Tooltip to be displayed on component's mouse hover"
+          }
+        ]
+      }
+    ]
+  },
+  "datasources": {
+    "rows": [
+      {
+        "id": "SQL",
+        "name": "SQL Queries",
+        "type": "Label",
+        "typeDesc": "<i>Group</i>",
+        "parent": "UnIqEiD",
+        "properties": [
+          {
+            "name": "Group",
+            "value": "SQL Queries",
+            "type": "Label",
+            "description": "Group",
+            "tooltip": "Group"
+          }
+        ]
+      },
+      {
+        "id": "718d58da-7182-6c1f-0556-15c37f3c9fce",
+        "type": "Componentssql_sqlJdbc",
+        "typeDesc": "sql over sqlJdbc",
+        "meta": "CDA",
+        "meta_conntype": "sql.jdbc",
+        "meta_datype": "sql",
+        "parent": "SQL",
+        "properties": [
+          {
+            "name": "name",
+            "value": "get_main_zips",
+            "type": "Id",
+            "order": 5,
+            "description": "Name",
+            "tooltip": "Name"
+          },
+          {
+            "name": "pass",
+            "value": "larsonjuhl",
+            "type": "String",
+            "order": 5,
+            "description": "Password",
+            "tooltip": "Password"
+          },
+          {
+            "name": "driver",
+            "value": "org.postgresql.Driver",
+            "type": "String",
+            "order": 5,
+            "description": "Driver",
+            "tooltip": "Driver"
+          },
+          {
+            "name": "user",
+            "value": "larsonjuhl",
+            "type": "String",
+            "order": 5,
+            "description": "User name",
+            "tooltip": "User name"
+          },
+          {
+            "name": "url",
+            "value": "jdbc:postgresql://localhost:5432/larsonjuhl",
+            "type": "String",
+            "order": 11,
+            "description": "URL",
+            "tooltip": "URL for the element"
+          },
+          {
+            "name": "access",
+            "value": "public",
+            "type": "Access",
+            "order": 11,
+            "description": "Access Level",
+            "tooltip": "The Access Level (Scope) for this data access"
+          },
+          {
+            "name": "query",
+            "value": "SELECT sales_rep, latitude, longitude, currentYear, lastYear, sales_regn_mngr\r\nFROM\r\n(SELECT  s_trid,\r\n    sum(case swd_year when 2013 then saexp end) as currentYear,\r\n\tsum(case swd_year when 2012 then saexp end) as lastYear\r\nFROM sales_monthly, customer\r\nWHERE s_shan = sshan\r\n  AND ((month_start_date between '2012-01-01' AND '2012-04-01')\r\n    OR  (month_start_date between '2013-01-01' AND '2013-04-01'))\r\nGROUP BY s_trid) as salesSummary, sales_dim, terr_main_zip\r\nWHERE terr_main_zip.terr_id = salesSummary.s_trid\r\nAND salesSummary.s_trid = sales_dim.s_trid",
+            "type": "SqlQuery",
+            "order": 25,
+            "description": "Query",
+            "tooltip": "Query to be executed in the selected datasource"
+          },
+          {
+            "name": "parameters",
+            "value": "[]",
+            "type": "CdaParameters",
+            "order": 28,
+            "description": "Parameters",
+            "tooltip": "Parameters to be sent to the xaction"
+          },
+          {
+            "name": "outputMode",
+            "value": "include",
+            "type": "OutputMode",
+            "order": 40,
+            "description": "Output Mode",
+            "tooltip": "Whether the output columns refer to columns that should be Included or Excluded from the final output"
+          },
+          {
+            "name": "cdacolumns",
+            "value": "[]",
+            "type": "CdaColumnsArray",
+            "order": 40,
+            "description": "Columns",
+            "tooltip": "Column Configuration"
+          },
+          {
+            "name": "cdacalculatedcolumns",
+            "value": "[]",
+            "type": "CdaCalculatedColumnsArray",
+            "order": 40,
+            "description": "Calculated Columns",
+            "tooltip": "Calculated Columns"
+          },
+          {
+            "name": "output",
+            "value": "[]",
+            "type": "IndexArray",
+            "order": 40,
+            "description": "Output Options",
+            "tooltip": "Output options for this data access"
+          },
+          {
+            "name": "cacheDuration",
+            "value": 3600,
+            "type": "Integer",
+            "order": 50,
+            "description": "Cache Duration",
+            "tooltip": "Cache Duration, in seconds"
+          },
+          {
+            "name": "cache",
+            "value": "true",
+            "type": "Boolean",
+            "order": 91,
+            "description": "Cache",
+            "tooltip": "Is this data access's output supposed to be cached?"
+          }
+        ]
+      }
+    ]
+  },
+  "filename": "/LJ_Reports/DBGoogleMapTest.wcdf"
+}

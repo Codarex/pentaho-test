@@ -1,0 +1,42 @@
+Nov 26, 2013 4:26:29 AM org.apache.catalina.core.AprLifecycleListener init
+INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: /usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64/server:/usr/lib/jvm/java-6-openjdk-amd64/jre/lib/amd64:/usr/lib/jvm/java-6-openjdk-amd64/jre/../lib/amd64:/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+Nov 26, 2013 4:26:29 AM org.apache.coyote.http11.Http11Protocol init
+INFO: Initializing Coyote HTTP/1.1 on http-8080
+Nov 26, 2013 4:26:29 AM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 734 ms
+Nov 26, 2013 4:26:29 AM org.apache.catalina.core.StandardService start
+INFO: Starting service Catalina
+Nov 26, 2013 4:26:29 AM org.apache.catalina.core.StandardEngine start
+INFO: Starting Servlet Engine: Apache Tomcat/6.0.29
+Nov 26, 2013 4:26:29 AM org.apache.catalina.startup.HostConfig deployDescriptor
+INFO: Deploying configuration descriptor pentaho.xml
+Nov 26, 2013 4:26:30 AM org.apache.catalina.startup.ContextConfig validateSecurityRoles
+INFO: WARNING: Security role name PENTAHO_ADMIN used in an <auth-constraint> without being defined in a <security-role>
+Nov 26, 2013 4:26:34 AM org.apache.catalina.core.StandardContext start
+SEVERE: Error listenerStart
+Nov 26, 2013 4:26:34 AM org.apache.catalina.core.StandardContext start
+SEVERE: Context [/pentaho] startup failed due to previous errors
+Nov 26, 2013 4:26:35 AM org.apache.catalina.loader.WebappClassLoader clearReferencesJdbc
+SEVERE: The web application [/pentaho] registered the JBDC driver [mondrian.olap4j.MondrianOlap4jDriver] but failed to unregister it when the web application was stopped. To prevent a memory leak, the JDBC Driver has been forcibly unregistered.
+Nov 26, 2013 4:26:35 AM org.apache.catalina.loader.WebappClassLoader clearReferencesThreads
+SEVERE: The web application [/pentaho] appears to have started a thread named [HSQLDB Timer @35f38fc6] but has failed to stop it. This is very likely to create a memory leak.
+Nov 26, 2013 4:26:35 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory sw-style
+Nov 26, 2013 4:26:35 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory ROOT
+Nov 26, 2013 4:26:35 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory pentaho-style
+Nov 26, 2013 4:26:35 AM org.apache.coyote.http11.Http11Protocol start
+INFO: Starting Coyote HTTP/1.1 on http-8080
+Nov 26, 2013 4:26:35 AM org.apache.jk.common.ChannelSocket init
+INFO: JK: ajp13 listening on /0.0.0.0:8009
+Nov 26, 2013 4:26:35 AM org.apache.jk.server.JkMain start
+INFO: Jk running ID=0 time=0/16  config=null
+Nov 26, 2013 4:26:35 AM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 5561 ms
+Nov 26, 2013 6:01:36 AM org.apache.coyote.http11.Http11Protocol pause
+INFO: Pausing Coyote HTTP/1.1 on http-8080
+Nov 26, 2013 6:01:37 AM org.apache.catalina.core.StandardService stop
+INFO: Stopping service Catalina
+Nov 26, 2013 6:01:37 AM org.apache.coyote.http11.Http11Protocol destroy
+INFO: Stopping Coyote HTTP/1.1 on http-8080

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDADescriptor>
+   <DataSources>
+      <Connection id="larsonjuhl" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+   </DataSources>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="larsonjuhl"
+               id="larsonjuhl"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT&#xD;
+     "sales_dim"."sales_rep",&#xD;
+     "sales_dim"."sales_regn_mngr",&#xD;
+     "product_dim"."c3_0",&#xD;
+     "product_dim"."c3_3",&#xD;
+     "sales_monthly"."month_start_date",&#xD;
+     count(distinct "sales_monthly"."sshan") as count_custs,&#xD;
+     sum("sales_monthly"."saexp") as total_order_sales,&#xD;
+     sum("sales_monthly"."snqty") as total_order_qty,&#xD;
+--     round(avg("sales_monthly"."snqty"),2) as avg_order_qty,&#xD;
+--     case when sum("sales_monthly"."ssoqs")=0 then 0.0 ELSE round(sum("sales_monthly"."secst")/sum("sales_monthly"."ssoqs"),2) END AS avg_ext_cost,&#xD;
+     case when sum("sales_monthly"."snqty")=0 then 0.0 ELSE round(sum("sales_monthly"."saexp")/sum("sales_monthly"."snqty"),2) END AS avg_inv_unit_price,&#xD;
+     round(avg(case when sulprc &gt; 0 then sulprc else NULL end),2) as avg_unit_list_price,&#xD;
+     round(avg(case when suprc &gt; 0 then suprc else NULL end),2) as avg_unit_selling_price,&#xD;
+     round(avg(case when scprc &gt; 0 then scprc else NULL end),2) as avg_contract_price,&#xD;
+     round(avg(case when scprcnt &gt; 0 then scprcnt else NULL end),2) as avg_contract_price_no_tag,&#xD;
+      &#xD;
+     round(avg(case when disc_custgrp_prdgrp_pct &lt;&gt; 0 then disc_custgrp_prdgrp_pct else NULL end),2) as avg_custgrp_prdgrp_pct,&#xD;
+     round(avg(case when disc_custgrp_prd_pct &lt;&gt; 0 then disc_custgrp_prd_pct else NULL end),2) as avg_custgrp_prd_pct,&#xD;
+     round(avg(case when disc_cust_prdgrp_pct &lt;&gt; 0 then disc_cust_prdgrp_pct else NULL end),2) as avg_cust_prdgrp_pct,&#xD;
+     round(avg(case when disc_cust_prd_pct &lt;&gt; 0 then disc_cust_prd_pct else NULL end),2) as avg_cust_prd_pct,&#xD;
+     round(avg(case when disc_prdgrp_pct &lt;&gt; 0 then disc_prdgrp_pct else NULL end),2) as avg_prdgrp_pct&#xD;
+ --    ,&#xD;
+ -- &#xD;
+ --    CASE SUM(snqty) WHEN 0 THEN round(AVG(disc_custgrp_prdgrp_pct),2) ELSE round(SUM(disc_custgrp_prdgrp_pct*snqty)/SUM(snqty),2) END AS disc_custgrp_prdgrp_pct,&#xD;
+ --    CASE SUM(snqty) WHEN 0 THEN round(AVG(disc_custgrp_prd_pct),2) ELSE round(SUM(disc_custgrp_prd_pct*snqty)/SUM(snqty),2) END AS disc_custgrp_prd_pct,&#xD;
+ --    CASE SUM(snqty) WHEN 0 THEN round(AVG(disc_cust_prdgrp_pct),2) ELSE round(SUM(disc_cust_prdgrp_pct*snqty)/SUM(snqty),2) END AS disc_cust_prdgrp_pct,&#xD;
+ --    CASE SUM(snqty) WHEN 0 THEN round(AVG(disc_cust_prd_pct),2) ELSE round(SUM(disc_cust_prd_pct*snqty)/SUM(snqty),2) END AS disc_cust_prd_pct,&#xD;
+ --    CASE SUM(snqty) WHEN 0 THEN round(AVG(disc_prdgrp_pct),2) ELSE round(SUM(disc_prdgrp_pct*snqty)/SUM(snqty),2) END AS disc_prdgrp_pct&#xD;
+FROM &#xD;
+     "sales_monthly" INNER JOIN "customer" ON "sales_monthly"."sshan" = "customer"."s_shan"&#xD;
+     INNER JOIN "product_dim" ON "sales_monthly"."slitm" = "product_dim"."product_id"&#xD;
+ --    INNER JOIN "date_defs" ON "sales_monthly"."month_start_date" = "date_defs"."month_start_date"&#xD;
+     INNER JOIN "sales_dim" ON "customer"."s_trid"="sales_dim"."s_trid"&#xD;
+ WHERE&#xD;
+     1=1&#xD;
+     AND "sales_monthly"."sdcto"='SO'&#xD;
+ --    AND "sales_dim"."sales_regn_mngr" IN (${reg_sales_mngr})&#xD;
+ --    AND "sales_dim"."sales_rep" IN (${sales_rep})&#xD;
+ --    AND "sold_to_customer_dim"."shipto" IN (${cust_name})&#xD;
+ --    AND "product_dim"."c3_3" in (${prod_family})&#xD;
+--    AND (sales_monthly.month_start_date between ${month_start_date} AND ${month_start_date})&#xD;
+    AND "sales_dim"."sales_regn_mngr" IN ('Dave Modean')&#xD;
+    AND "sales_dim"."sales_rep" IN ('(615)CINDY CAMBRIDGE')&#xD;
+    AND "product_dim"."c3_3" in ('Artique')&#xD;
+    AND (sales_monthly.month_start_date between '2011-01-01' AND '2013-02-01')&#xD;
+GROUP BY&#xD;
+     "sales_dim"."sales_rep",&#xD;
+     "sales_dim"."sales_regn_mngr",&#xD;
+     "sales_monthly"."month_start_date",&#xD;
+     "product_dim"."c3_0",&#xD;
+     "product_dim"."c3_3"&#xD;
+ ORDER BY&#xD;
+     "sales_dim"."sales_regn_mngr" ASC,&#xD;
+     "sales_dim"."sales_rep" ASC,&#xD;
+     "product_dim"."c3_3" ASC,&#xD;
+     "product_dim"."c3_0" ASC,&#xD;
+     "sales_monthly"."month_start_date" ASC;</Query>
+   </DataAccess>
+</CDADescriptor>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDADescriptor>
+   <DataSources>
+      <Connection id="get_date_range" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_sales_mgr" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_revenue_comp" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_revenue_comp_table" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_current_ytd_sales_by_rep" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+   </DataSources>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_date_range"
+               id="get_date_range"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>with find_max_year AS&#xD;
+    (SELECT max(swd_year) AS max_year &#xD;
+	FROM 	sales_monthly_agg_dashboard)&#xD;
+&#xD;
+SELECT	min(month_start_date), max(month_start_date)&#xD;
+FROM	sales_monthly_agg_dashboard, find_max_year&#xD;
+WHERE 	swd_year = max_year</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_sales_mgr"
+               id="get_sales_mgr"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT distinct sales_regn_mngr&#xD;
+FROM sales_dim&#xD;
+WHERE sales_regn_mngr = 'Dave Modean'</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_revenue_comp"
+               id="get_revenue_comp"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesManager" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+(&#xD;
+SELECT    'Margin' as SERIES,&#xD;
+    sum(case swd_year when 2013 then saexp - secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp - secst end) as LastYear&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard, customer, sales_dim&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND	customer.s_trid = sales_dim.s_trid&#xD;
+  AND   sales_regn_mngr LIKE ${salesManager}&#xD;
+)&#xD;
+UNION ALL&#xD;
+(&#xD;
+SELECT&#xD;
+	'Other Cost' as SERIES,&#xD;
+	sum(case swd_year when 2013 then secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then secst end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard, customer, sales_dim&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND   slitm NOT LIKE 'CS%'&#xD;
+  AND	customer.s_trid = sales_dim.s_trid&#xD;
+  AND   sales_regn_mngr LIKE ${salesManager}&#xD;
+)&#xD;
+UNION ALL&#xD;
+(&#xD;
+SELECT&#xD;
+    'CS Cost' as SERIES,&#xD;
+	sum(case swd_year when 2013 then secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then secst end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard, customer, sales_dim&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND   slitm LIKE 'CS%'&#xD;
+  AND	customer.s_trid = sales_dim.s_trid&#xD;
+  AND   sales_regn_mngr LIKE ${salesManager}&#xD;
+)&#xD;
+UNION ALL &#xD;
+(&#xD;
+SELECT&#xD;
+	'Revenue' as SERIES,&#xD;
+	sum(case swd_year when 2013 then saexp end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard, customer, sales_dim&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND	customer.s_trid = sales_dim.s_trid&#xD;
+  AND   sales_regn_mngr LIKE ${salesManager}&#xD;
+)</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_revenue_comp_table"
+               id="get_revenue_comp_table"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesManager" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+(&#xD;
+SELECT&#xD;
+    'Revenue' as SERIES,&#xD;
+	sum(case swd_year when 2013 then saexp end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard, customer, sales_dim&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND	customer.s_trid = sales_dim.s_trid&#xD;
+  AND   sales_regn_mngr LIKE ${salesManager}&#xD;
+)&#xD;
+UNION ALL&#xD;
+(&#xD;
+SELECT&#xD;
+	'CS Cost' as SERIES,&#xD;
+	sum(case swd_year when 2013 then secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then secst end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard, customer, sales_dim&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND   slitm LIKE 'CS%'&#xD;
+  AND	customer.s_trid = sales_dim.s_trid&#xD;
+  AND   sales_regn_mngr LIKE ${salesManager}&#xD;
+)&#xD;
+UNION ALL&#xD;
+(&#xD;
+SELECT&#xD;
+    'Other Cost' as SERIES,&#xD;
+	sum(case swd_year when 2013 then secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then secst end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard, customer, sales_dim&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND   slitm NOT LIKE 'CS%'&#xD;
+  AND	customer.s_trid = sales_dim.s_trid&#xD;
+  AND   sales_regn_mngr LIKE ${salesManager}&#xD;
+)&#xD;
+UNION ALL &#xD;
+(&#xD;
+SELECT    'Margin' as SERIES,&#xD;
+    sum(case swd_year when 2013 then saexp - secst end) as Current,&#xD;
+    sum(case swd_year when 2012 then saexp - secst end) as LastYear&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard, customer, sales_dim&#xD;
+WHERE    &#xD;
+	s_shan = sshan&#xD;
+  AND	customer.s_trid = sales_dim.s_trid&#xD;
+  AND   sales_regn_mngr LIKE ${salesManager}&#xD;
+)</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_current_ytd_sales_by_rep"
+               id="get_current_ytd_sales_by_rep"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesManager" type="String"/>
+      </Parameters>
+      <Query>with find_max_year AS&#xD;
+    (SELECT max(swd_year) AS max_year &#xD;
+	FROM 	sales_monthly_agg_dashboard)&#xD;
+&#xD;
+SELECT sales_rep, SalesTotal&#xD;
+FROM &#xD;
+(&#xD;
+SELECT&#xD;
+    customer.s_trid as TerrID, &#xD;
+    sum(saexp) as SalesTotal&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard, customer, sales_dim, find_max_year&#xD;
+WHERE    &#xD;
+	s_shan = sshan&#xD;
+  AND	customer.s_trid = sales_dim.s_trid&#xD;
+  AND   sales_regn_mngr LIKE ${salesManager}&#xD;
+  AND   swd_year = max_year&#xD;
+GROUP BY TerrID&#xD;
+) as q1, sales_dim&#xD;
+where TerrID = s_trid</Query>
+   </DataAccess>
+</CDADescriptor>

@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDADescriptor>
+   <DataSources>
+      <Connection id="get_sales_rep" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_customers" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_product_family" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_product_group" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_product_item" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_uom" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_start_date" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_end_date" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_price_data" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_price_data_current" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_price_data_last" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+   </DataSources>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_sales_rep"
+               id="get_sales_rep"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT s_trid, sales_rep from sales_dim&#xD;
+--WHERE s_trid LIKE '630'&#xD;
+ORDER BY s_trid</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_customers"
+               id="get_customers"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="630" name="salesTerr" type="String"/>
+      </Parameters>
+      <Query>SELECT 0 AS s_shan, '*ALL' AS cust_info&#xD;
+UNION&#xD;
+SELECT     DISTINCT s_shan, s_alph || ' (' || s_shan::text || ')' AS cust_info&#xD;
+FROM 	customer&#xD;
+WHERE	s_trid LIKE ${salesTerr}&#xD;
+ORDER BY cust_info</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_product_family"
+               id="get_product_family"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>select '%' as c3_3, '(*)ALL' as desc
+UNION
+Select distinct c3_3, c3_3 as desc
+from product_dim 
+order by c3_3;</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_product_group"
+               id="get_product_group"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="productFamily" type="String"/>
+      </Parameters>
+      <Query>select '%' as c3_0, '(*)ALL' as desc&#xD;
+UNION&#xD;
+select distinct c3_0, c3_0 as desc&#xD;
+from product_dim &#xD;
+where ascii(${productFamily}) != 37 AND c3_3 like ${productFamily}&#xD;
+order by c3_0</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_product_item"
+               id="get_product_item"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="productGroup" type="String"/>
+      </Parameters>
+      <Query>select '%' as product_id, '(*)ALL' as item&#xD;
+UNION&#xD;
+select distinct product_id, item&#xD;
+from product_dim &#xD;
+where ascii(${productGroup}) != 37 AND c3_0 like ${productGroup}&#xD;
+order by product_id</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_uom"
+               id="get_uom"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesTerr" type="String"/>
+         <Parameter default="" name="productFamily" type="String"/>
+         <Parameter default="" name="productGroup" type="String"/>
+         <Parameter default="" name="productItem" type="String"/>
+      </Parameters>
+      <Query>select '%' as souom, '(*)ALL' as desc&#xD;
+UNION&#xD;
+SELECT  DISTINCT souom, souom as desc&#xD;
+FROM 	sales_monthly, customer, product_dim&#xD;
+WHERE 	sshan = s_shan AND slitm = product_id&#xD;
+	AND customer.s_trid LIKE ${salesTerr}&#xD;
+	AND c3_3 LIKE ${productFamily}&#xD;
+	AND C3_0 LIKE ${productGroup}&#xD;
+    AND slitm LIKE ${productItem}&#xD;
+ORDER by souom</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_start_date"
+               id="get_start_date"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT    DISTINCT month_start_date&#xD;
+FROM	date_defs&#xD;
+WHERE	year = 2013&#xD;
+	AND month_start_date &lt; CURRENT_DATE&#xD;
+ORDER BY month_start_date</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_end_date"
+               id="get_end_date"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="startDate" name="startDate" type="String"/>
+      </Parameters>
+      <Query>SELECT    DISTINCT month_end_date&#xD;
+FROM	date_defs&#xD;
+WHERE	month_end_date &gt; DATE(${startDate})&#xD;
+	AND month_end_date &lt; CURRENT_DATE&#xD;
+ORDER BY month_end_date</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_price_data"
+               id="get_price_data"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="salesTerr" name="salesTerr" type="String"/>
+         <Parameter default="productFamily" name="productFamily" type="String"/>
+         <Parameter default="productGroup" name="productGroup" type="String"/>
+         <Parameter default="productItem" name="productItem" type="String"/>
+         <Parameter default="uom" name="uom" type="String"/>
+         <Parameter default="customer_code" name="customer_code" type="Numeric"/>
+         <Parameter default="startDate" name="startDate" type="String"/>
+         <Parameter default="endDate" name="endDate" type="String"/>
+      </Parameters>
+      <Query>WITH summary_info as&#xD;
+(SELECT SUM(CASE swd_year WHEN 2013 THEN saexp END) AS sales_total_curr_year,&#xD;
+    SUM(CASE swd_year WHEN 2013 THEN secst END) AS sales_cost_curr_year,&#xD;
+	SUM(CASE swd_year WHEN 2013 THEN ssoqs END) AS total_shipped_curr_year,&#xD;
+	SUM(CASE swd_year WHEN 2013 THEN list_price * ssoqs END) AS total_list_curr_year,&#xD;
+	SUM(CASE swd_year WHEN 2013 THEN suprc * ssoqs END) AS total_sellin_curr_year,&#xD;
+	SUM(CASE swd_year WHEN 2012 THEN saexp END) AS sales_total_last_year,&#xD;
+	SUM(CASE swd_year WHEN 2012 THEN secst END) AS sales_cost_last_year,&#xD;
+	SUM(CASE swd_year WHEN 2012 THEN ssoqs END) AS total_shipped_last_year,&#xD;
+	SUM(CASE swd_year WHEN 2012 THEN list_price * ssoqs END) AS total_list_last_year,&#xD;
+	SUM(CASE swd_year WHEN 2012 THEN saexp END) AS total_sellin_last_year&#xD;
+FROM 	sales_monthly, customer, product_dim&#xD;
+WHERE 	sshan = s_shan AND slitm = product_id&#xD;
+    AND customer.s_trid LIKE ${salesTerr}&#xD;
+	AND c3_3 LIKE ${productFamily}&#xD;
+	AND C3_0 LIKE ${productGroup}&#xD;
+	AND slitm LIKE ${productItem}&#xD;
+	AND souom LIKE ${uom}&#xD;
+	AND (${customer_code} = 0 OR s_shan = ${customer_code})&#xD;
+	AND 	(month_start_date between DATE('2013-01-01') AND DATE(${endDate})&#xD;
+		OR (month_start_date between (DATE(${startDate}) - INTERVAL '1 year') &#xD;
+    				AND (DATE(${endDate}) - INTERVAL '1 year'))))&#xD;
+SELECT	'2013' AS Year,&#xD;
+	to_char(sales_total_curr_year, 'L999,999,999') AS Total_Sales,&#xD;
+	to_char(sales_total_curr_year-sales_cost_curr_year, 'L999,999,999') AS Total_Margin,&#xD;
+	to_char(CASE 	WHEN total_shipped_curr_year = 0 THEN 0&#xD;
+		ELSE (total_list_curr_year/total_shipped_curr_year) &#xD;
+		END, 'L999.99') AS List_Price,&#xD;
+	to_char(CASE 	WHEN total_shipped_curr_year = 0 THEN 0&#xD;
+		ELSE ((total_list_curr_year - total_sellin_curr_year)/total_shipped_curr_year) * -1 &#xD;
+		END, 'L999.99') AS Avg_Disc,&#xD;
+	to_char(CASE 	WHEN total_shipped_curr_year = 0 THEN 0&#xD;
+		ELSE (total_sellin_curr_year/total_shipped_curr_year) &#xD;
+		END, 'L999.99') AS Avg_Sale_Price,&#xD;
+	to_char(CASE 	WHEN total_shipped_curr_year = 0 THEN 0&#xD;
+		ELSE (sales_cost_curr_year/total_shipped_curr_year) * -1 &#xD;
+		END, 'L999.99') AS Cost,&#xD;
+	to_char(CASE 	WHEN total_shipped_curr_year = 0 THEN 0&#xD;
+		ELSE (total_sellin_curr_year - sales_cost_curr_year)/total_shipped_curr_year &#xD;
+		END, 'L999.99') AS Avg_Margin&#xD;
+FROM summary_info&#xD;
+UNION&#xD;
+SELECT	'2012' AS Year,&#xD;
+	to_char(sales_total_last_year, 'L999,999,999') AS Total_Sales,&#xD;
+	to_char(sales_total_last_year-sales_cost_last_year, 'L999,999,999') AS Total_Margin,&#xD;
+	to_char(CASE 	WHEN total_shipped_last_year = 0 THEN 0&#xD;
+		ELSE (total_list_last_year/total_shipped_last_year) &#xD;
+		END, 'L999.99') AS List_Price,&#xD;
+	to_char(CASE 	WHEN total_shipped_last_year = 0 THEN 0&#xD;
+		ELSE ((total_list_last_year - total_sellin_last_year)/total_shipped_last_year) * -1 &#xD;
+		END, 'L999.99') AS Avg_Disc,&#xD;
+	to_char(CASE 	WHEN total_shipped_last_year = 0 THEN 0&#xD;
+		ELSE (total_sellin_last_year/total_shipped_last_year) &#xD;
+		END, 'L999.99') AS Avg_Sale_Price,&#xD;
+	to_char(CASE 	WHEN total_shipped_last_year = 0 THEN 0&#xD;
+		ELSE (sales_cost_last_year/total_shipped_last_year) * -1 &#xD;
+		END, 'L999.99') AS Cost,&#xD;
+	to_char(CASE 	WHEN total_shipped_last_year = 0 THEN 0&#xD;
+		ELSE (total_sellin_last_year - sales_cost_last_year)/total_shipped_last_year &#xD;
+		END, 'L999.99') AS Avg_Margin&#xD;
+FROM summary_info&#xD;
+ORDER BY Year DESC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_price_data_current"
+               id="get_price_data_current"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="salesTerr" name="salesTerr" type="String"/>
+         <Parameter default="productFamily" name="productFamily" type="String"/>
+         <Parameter default="productGroup" name="productGroup" type="String"/>
+         <Parameter default="productItem" name="productItem" type="String"/>
+         <Parameter default="uom" name="uom" type="String"/>
+         <Parameter default="customer_code" name="customer_code" type="Numeric"/>
+         <Parameter default="startDate" name="startDate" type="String"/>
+         <Parameter default="endDate" name="endDate" type="String"/>
+      </Parameters>
+      <Query>WITH summary_info AS&#xD;
+(SELECT &#xD;
+    SUM(saexp) AS sales_total_curr_year,&#xD;
+	SUM(secst) AS sales_cost_curr_year,&#xD;
+	SUM(ssoqs) AS total_shipped_curr_year,&#xD;
+	SUM(list_price * ssoqs) AS total_list_curr_year,&#xD;
+	SUM(suprc * ssoqs) AS total_sellin_curr_year&#xD;
+FROM 	sales_monthly, customer, product_dim&#xD;
+WHERE 	sshan = s_shan AND slitm = product_id&#xD;
+    AND customer.s_trid LIKE ${salesTerr}&#xD;
+	AND c3_3 LIKE ${productFamily}&#xD;
+	AND C3_0 LIKE ${productGroup}&#xD;
+	AND slitm LIKE ${productItem}&#xD;
+	AND souom LIKE ${uom}&#xD;
+    AND (${customer_code} = 0 OR s_shan = ${customer_code})&#xD;
+	AND (month_start_date BETWEEN DATE(${startDate}) AND DATE(${endDate})))&#xD;
+SELECT  'Avg Disc' AS series, &#xD;
+	CASE 	WHEN total_shipped_curr_year = 0 THEN 0&#xD;
+		ELSE ((total_list_curr_year - total_sellin_curr_year)/total_shipped_curr_year) &#xD;
+		END AS price_info&#xD;
+FROM summary_info&#xD;
+UNION&#xD;
+SELECT  'Cost' AS series, &#xD;
+	CASE 	WHEN total_shipped_curr_year = 0 THEN 0&#xD;
+		ELSE (sales_cost_curr_year/total_shipped_curr_year)&#xD;
+		END AS price_info&#xD;
+FROM summary_info&#xD;
+UNION&#xD;
+SELECT  'Margin' AS series, &#xD;
+	CASE 	WHEN total_shipped_curr_year = 0 THEN 0&#xD;
+		ELSE (total_sellin_curr_year - sales_cost_curr_year)/total_shipped_curr_year &#xD;
+		END AS price_info&#xD;
+FROM summary_info&#xD;
+ORDER BY series</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_price_data_last"
+               id="get_price_data_last"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="salesTerr" name="salesTerr" type="String"/>
+         <Parameter default="productFamily" name="productFamily" type="String"/>
+         <Parameter default="productGroup" name="productGroup" type="String"/>
+         <Parameter default="productItem" name="productItem" type="String"/>
+         <Parameter default="uom" name="uom" type="String"/>
+         <Parameter default="customer_code" name="customer_code" type="Numeric"/>
+         <Parameter default="startDate" name="startDate" type="String"/>
+         <Parameter default="endDate" name="endDate" type="String"/>
+      </Parameters>
+      <Query>WITH summary_info AS&#xD;
+(SELECT &#xD;
+    SUM(saexp) AS sales_total_last_year,&#xD;
+	SUM(secst) AS sales_cost_last_year,&#xD;
+	SUM(ssoqs) AS total_shipped_last_year,&#xD;
+	SUM(list_price * ssoqs) AS total_list_last_year,&#xD;
+	SUM(saexp) AS total_sellin_last_year&#xD;
+FROM 	sales_monthly, customer, product_dim&#xD;
+WHERE 	sshan = s_shan AND slitm = product_id&#xD;
+    AND customer.s_trid LIKE ${salesTerr}&#xD;
+	AND c3_3 LIKE ${productFamily}&#xD;
+	AND C3_0 LIKE ${productGroup}&#xD;
+	AND slitm LIKE ${productItem}&#xD;
+	AND souom LIKE ${uom}&#xD;
+    AND (${customer_code} = 0 OR s_shan = ${customer_code})&#xD;
+	AND (month_start_date between (DATE(${startDate}) - INTERVAL '1 year') &#xD;
+    				AND (DATE(${endDate}) - INTERVAL '1 year')))&#xD;
+SELECT  'Avg Disc' AS series, &#xD;
+	CASE 	WHEN total_shipped_last_year = 0 THEN 0&#xD;
+		ELSE ((total_list_last_year - total_sellin_last_year)/total_shipped_last_year) &#xD;
+		END AS price_info&#xD;
+FROM summary_info&#xD;
+UNION&#xD;
+SELECT  'Cost' AS series, &#xD;
+	CASE 	WHEN total_shipped_last_year = 0 THEN 0&#xD;
+		ELSE (sales_cost_last_year/total_shipped_last_year)&#xD;
+		END AS price_info&#xD;
+FROM summary_info&#xD;
+UNION&#xD;
+SELECT  'Margin' AS series, &#xD;
+	CASE 	WHEN total_shipped_last_year = 0 THEN 0&#xD;
+		ELSE (total_sellin_last_year - sales_cost_last_year)/total_shipped_last_year &#xD;
+		END AS price_info&#xD;
+FROM summary_info&#xD;
+ORDER BY series</Query>
+   </DataAccess>
+</CDADescriptor>

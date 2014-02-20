@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDADescriptor>
+   <DataSources>
+      <Connection id="get_sales_rep" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_top_customers" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_under_customers" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_top_families" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_under_families" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_top_cust_map" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_bot_cust_map" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_revenue_comp" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+   </DataSources>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_sales_rep"
+               id="get_sales_rep"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT sales_rep&#xD;
+FROM sales_dim&#xD;
+WHERE s_trid = '655'</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_top_customers"
+               id="get_top_customers"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT s_alph as Customer, CurrentSales, LastYear&#xD;
+FROM &#xD;
+(SELECT&#xD;
+    sshan as CustNo, &#xD;
+    sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+	sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard2, customer&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND	s_trid = '655'&#xD;
+  AND   ((month_start_date between '2012-01-01' AND '2012-07-01')&#xD;
+    OR  (month_start_date between '2013-01-01' AND '2013-07-01'))&#xD;
+GROUP BY CustNo&#xD;
+ORDER BY CurrentSales DESC NULLS LAST LIMIT 10) as q1, customer&#xD;
+where CustNo = s_shan&#xD;
+order by CurrentSales ASC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_under_customers"
+               id="get_under_customers"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT s_alph as Customer, CurrentSales, LastYear&#xD;
+FROM &#xD;
+(SELECT CustNo, CurrentSales, LastYear, SalesDiff&#xD;
+FROM&#xD;
+(SELECT CustNo, CurrentSales, LastYear, (CurrentSales - LastYear) as SalesDiff&#xD;
+FROM &#xD;
+(SELECT&#xD;
+    sshan as CustNo, &#xD;
+    sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+    sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard2, customer&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND	s_trid = '655'&#xD;
+  AND   ((month_start_date between '2012-01-01' AND '2012-07-01')&#xD;
+    OR  (month_start_date between '2013-01-01' AND '2013-07-01'))&#xD;
+GROUP BY CustNo) as q1 &#xD;
+ORDER BY SalesDiff ASC NULLS LAST LIMIT 10) as q2&#xD;
+ORDER BY SalesDiff DESC) as q3, customer&#xD;
+where CustNo = s_shan</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_top_families"
+               id="get_top_families"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>WITH top_collections AS (&#xD;
+    select     c3_0 as Collection, sum(saexp) as CurrentSales    &#xD;
+	from sales_monthly_agg_dashboard2, product_dim, customer&#xD;
+	where 	slitm = product_id&#xD;
+		AND s_shan = sshan&#xD;
+		AND s_trid = '655'&#xD;
+		AND (month_start_date between '2013-01-01' AND '2013-07-01')&#xD;
+	group by Collection&#xD;
+	order by CurrentSales DESC NULLS LAST limit 10),&#xD;
+     last_year_sales AS (&#xD;
+	select 	c3_0, sum(saexp) as LastYear	&#xD;
+	from sales_monthly_agg_dashboard2, product_dim, customer&#xD;
+	where 	c3_0 IN (select Collection from top_collections)&#xD;
+		AND slitm = product_id&#xD;
+		AND s_shan = sshan&#xD;
+		AND s_trid = '655'&#xD;
+		AND (month_start_date between '2012-01-01' AND '2012-07-01')&#xD;
+	group by c3_0)&#xD;
+SELECT Collection, CurrentSales, LastYear&#xD;
+FROM top_collections, last_year_sales&#xD;
+WHERE Collection = c3_0&#xD;
+ORDER BY CurrentSales ASC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_under_families"
+               id="get_under_families"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT Collection, CurrentSales, LastYear&#xD;
+FROM&#xD;
+(SELECT Collection, CurrentSales, LastYear, (CurrentSales - LastYear) as SalesDiff&#xD;
+FROM&#xD;
+(select     c3_0 as Collection, &#xD;
+    sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+	sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+from sales_monthly_agg_dashboard2, product_dim, customer&#xD;
+where 	slitm = product_id&#xD;
+  AND	s_shan = sshan&#xD;
+  AND	s_trid = '655'&#xD;
+   AND ((month_start_date between '2012-01-01' AND '2012-07-01')&#xD;
+    OR (month_start_date between '2013-01-01' AND '2013-07-01'))&#xD;
+group by Collection) as q1&#xD;
+ORDER BY SalesDiff ASC NULLS LAST LIMIT 10) as q2&#xD;
+ORDER BY SalesDiff DESC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_top_cust_map"
+               id="get_top_cust_map"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT s_alph as Customer, latitude, longitude, CurrentSales, LastYear&#xD;
+    ,HC01_EST_VC02,HC02_EST_VC02&#xD;
+FROM &#xD;
+(SELECT&#xD;
+    sshan as CustNo, &#xD;
+    sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+    sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard2, customer&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND	s_trid = '655'&#xD;
+  AND   ((month_start_date between '2012-01-01' AND '2012-07-01')&#xD;
+    OR  (month_start_date between '2013-01-01' AND '2013-07-01'))&#xD;
+GROUP BY CustNo&#xD;
+ORDER BY CurrentSales DESC NULLS LAST LIMIT 10) as q1, customer, zcta, s1902&#xD;
+where CustNo = s_shan&#xD;
+and substring(s_addz from 1 for 5) = zipcode&#xD;
+and zipcode = geo_id2</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_bot_cust_map"
+               id="get_bot_cust_map"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT s_alph as Customer, latitude, longitude, CurrentSales, LastYear&#xD;
+    ,HC01_EST_VC02,HC02_EST_VC02&#xD;
+FROM &#xD;
+(SELECT CustNo, CurrentSales, LastYear, SalesDiff&#xD;
+FROM&#xD;
+(SELECT CustNo, CurrentSales, LastYear, (CurrentSales - LastYear) as SalesDiff&#xD;
+FROM &#xD;
+(SELECT&#xD;
+    sshan as CustNo, &#xD;
+    sum(case swd_year when 2013 then saexp end) as CurrentSales,&#xD;
+    sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard2, customer&#xD;
+WHERE    &#xD;
+	s_shan = sshan&#xD;
+  AND	s_trid = '655'&#xD;
+  AND   ((month_start_date between '2012-01-01' AND '2012-07-01')&#xD;
+    OR  (month_start_date between '2013-01-01' AND '2013-07-01'))&#xD;
+GROUP BY CustNo) as q1 &#xD;
+ORDER BY SalesDiff ASC NULLS LAST LIMIT 10) as q2&#xD;
+ORDER BY SalesDiff DESC) as q3, customer, zcta, s1902&#xD;
+where CustNo = s_shan&#xD;
+and substring(s_addz from 1 for 5) = zipcode&#xD;
+and zipcode = geo_id2</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_revenue_comp"
+               id="get_revenue_comp"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>(&#xD;
+SELECT    'Profit' as SERIES,&#xD;
+	sum(case swd_year when 2013 then saexp - secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp - secst end) as LastYear&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard2, customer&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND	s_trid = '655'&#xD;
+  AND   ((month_start_date between '2012-01-01' AND '2012-07-01')&#xD;
+    OR  (month_start_date between '2013-01-01' AND '2013-07-01'))&#xD;
+)&#xD;
+UNION ALL&#xD;
+(&#xD;
+SELECT&#xD;
+	'Cost' as SERIES,&#xD;
+	sum(case swd_year when 2013 then secst end) as Current,&#xD;
+	sum(case swd_year when 2012 then secst end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard2, customer&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND	s_trid = '655'&#xD;
+  AND   ((month_start_date between '2012-01-01' AND '2012-07-01')&#xD;
+    OR  (month_start_date between '2013-01-01' AND '2013-07-01'))&#xD;
+)&#xD;
+UNION ALL &#xD;
+(&#xD;
+SELECT&#xD;
+	'Revenue' as SERIES,&#xD;
+	sum(case swd_year when 2013 then saexp end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard2, customer&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND	s_trid = '655'&#xD;
+  AND   ((month_start_date between '2012-01-01' AND '2012-07-01')&#xD;
+    OR  (month_start_date between '2013-01-01' AND '2013-07-01'))&#xD;
+)</Query>
+   </DataAccess>
+</CDADescriptor>

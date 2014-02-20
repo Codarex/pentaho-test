@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CDADescriptor>
+   <DataSources>
+      <Connection id="get_date_range" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_sales_rep" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_sales_by_zip_map" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_zip_from_sales_rep" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_cust_from_zip" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_terr_latlog" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_revenue_comp" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+      <Connection id="get_revenue_comp_tab" type="sql.jdbc">
+         <Driver>org.postgresql.Driver</Driver>
+         <Pass>larsonjuhl</Pass>
+         <Url>jdbc:postgresql://localhost:5432/larsonjuhl</Url>
+         <User>larsonjuhl</User>
+      </Connection>
+   </DataSources>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_date_range"
+               id="get_date_range"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>with find_max_year AS&#xD;
+    (SELECT max(swd_year) AS max_year &#xD;
+    FROM 	sales_monthly_agg_dashboard)&#xD;
+&#xD;
+SELECT	min(month_start_date), max(month_start_date)&#xD;
+FROM	sales_monthly_agg_dashboard, find_max_year&#xD;
+WHERE 	swd_year = max_year</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_sales_rep"
+               id="get_sales_rep"
+               type="sql">
+      <Columns/>
+      <Parameters/>
+      <Query>SELECT s_trid, sales_rep from sales_dim&#xD;
+--WHERE s_trid LIKE '655'&#xD;
+ORDER BY s_trid</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_sales_by_zip_map"
+               id="get_sales_by_zip_map"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesRep" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard2 only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+WITH wm_sales AS (SELECT zipcode, &#xD;
+    	sum(case swd_year when 2013 then saexp end) as CurrentSalesWM,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYearWM&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard, product_dim, customer&#xD;
+	WHERE    &#xD;
+		slitm = product_id&#xD;
+        AND prod_top like '%Moulding%'&#xD;
+    	AND	c3_2 LIKE 'Wood%' &#xD;
+        AND c3_3 NOT LIKE 'Other%' -- branded wood&#xD;
+		AND s_shan = sshan&#xD;
+		AND s_trid LIKE ${salesRep}&#xD;
+	GROUP BY zipcode),&#xD;
+glass_info AS&#xD;
+    (SELECT    distinct product_id AS glass_product_id&#xD;
+	FROM 	product_dim&#xD;
+	WHERE	prod_top LIKE 'Access%'&#xD;
+	AND	c3_2 LIKE 'Glaz%'&#xD;
+	AND	(prod_category LIKE '%useum'&#xD;
+		OR prod_category LIKE '%onservation%lear%')&#xD;
+	),&#xD;
+foam_info AS&#xD;
+	(SELECT distinct u_litm AS foam_product_id&#xD;
+	FROM product&#xD;
+	WHERE u_srp2dsc LIKE '%FOAM%'),	&#xD;
+product_info AS&#xD;
+	(SELECT product_id, c3_0&#xD;
+	FROM 	product_dim, glass_info, foam_info&#xD;
+	WHERE	product_id = glass_product_id&#xD;
+		OR product_id = foam_product_id&#xD;
+	ORDER BY product_id),&#xD;
+acc_sales AS (SELECT zipcode, &#xD;
+		sum(case swd_year when 2013 then saexp end) as CurrentSalesAcc,&#xD;
+		sum(case swd_year when 2012 then saexp end) as LastYearAcc&#xD;
+	FROM&#xD;
+		sales_monthly_agg_dashboard, product_info, customer&#xD;
+	WHERE    &#xD;
+		slitm = product_id&#xD;
+		AND s_shan = sshan&#xD;
+		AND s_trid LIKE ${salesRep}&#xD;
+	GROUP BY zipcode),&#xD;
+&#xD;
+all_sales AS (SELECT wm_sales.zipcode, CurrentSalesWM, LastYearWM, CurrentSalesAcc, LastYearAcc&#xD;
+	FROM wm_sales FULL JOIN acc_sales &#xD;
+	ON wm_sales.zipcode = acc_sales.zipcode)&#xD;
+&#xD;
+SELECT    all_sales.zipcode, latitude, longitude,&#xD;
+	CurrentSalesWM, LastYearWM, CurrentSalesAcc, LastYearAcc, &#xD;
+	HC01_EST_VC02,HC02_EST_VC02&#xD;
+FROM	all_sales, s1902, zcta&#xD;
+WHERE	all_sales.zipcode = geo_id2&#xD;
+	AND all_sales.zipcode = zcta.zipcode;</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_zip_from_sales_rep"
+               id="get_zip_from_sales_rep"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesRep" type="String"/>
+      </Parameters>
+      <Query>SELECT     distinct zipcode&#xD;
+FROM	sales_monthly_agg_dashboard, customer&#xD;
+WHERE   s_shan = sshan&#xD;
+    AND s_trid LIKE ${salesRep}&#xD;
+ORDER BY zipcode</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_cust_from_zip"
+               id="get_cust_from_zip"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="zipCode" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+WITH sales_info AS&#xD;
+	(SELECT	sshan, &#xD;
+            sum(case swd_year when 2013 then saexp end) as Current,&#xD;
+            sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	FROM	sales_monthly_agg_dashboard&#xD;
+	WHERE	zipcode LIKE ${zipCode}&#xD;
+	GROUP BY sshan)&#xD;
+SELECT	s_alph as Customer, Current, LastYear&#xD;
+FROM	sales_info, customer&#xD;
+WHERE	sshan = s_shan&#xD;
+ORDER BY Current ASC</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_terr_latlog"
+               id="get_terr_latlog"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesRep" type="String"/>
+      </Parameters>
+      <Query>SELECT latitude, longitude &#xD;
+FROM terr_main_zip&#xD;
+WHERE terr_id LIKE ${salesRep};</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600" connection="get_revenue_comp"
+               id="get_revenue_comp"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesRep" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+(&#xD;
+SELECT    'Margin' as SERIES,&#xD;
+    sum(case swd_year when 2013 then saexp - secst end) as Current,&#xD;
+    sum(case swd_year when 2012 then saexp - secst end) as LastYear&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard, customer&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND	s_trid LIKE ${salesRep}&#xD;
+)&#xD;
+UNION ALL &#xD;
+(&#xD;
+SELECT&#xD;
+	'Revenue' as SERIES,&#xD;
+	sum(case swd_year when 2013 then saexp end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard, customer&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND    s_trid LIKE ${salesRep}&#xD;
+)</Query>
+   </DataAccess>
+   <DataAccess access="public" cache="true" cacheDuration="3600"
+               connection="get_revenue_comp_tab"
+               id="get_revenue_comp_tab"
+               type="sql">
+      <Columns/>
+      <Parameters>
+         <Parameter default="" name="salesRep" type="String"/>
+      </Parameters>
+      <Query>/* NOTE: No date in WHERE clause since sales_monthly_agg_dashboard only contains the data &#xD;
+    for the dates we need (YTD last year and this yesr)&#xD;
+*/&#xD;
+(&#xD;
+SELECT&#xD;
+    'Revenue' as SERIES,&#xD;
+	sum(case swd_year when 2013 then saexp end) as Current,&#xD;
+	sum(case swd_year when 2012 then saexp end) as LastYear&#xD;
+	&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard, customer&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND    s_trid LIKE ${salesRep}&#xD;
+)&#xD;
+UNION ALL&#xD;
+(&#xD;
+SELECT    'Margin' as SERIES,&#xD;
+    sum(case swd_year when 2013 then saexp - secst end) as Current,&#xD;
+    sum(case swd_year when 2012 then saexp - secst end) as LastYear&#xD;
+FROM&#xD;
+        sales_monthly_agg_dashboard, customer&#xD;
+WHERE	&#xD;
+	s_shan = sshan&#xD;
+  AND	s_trid LIKE ${salesRep}&#xD;
+)</Query>
+   </DataAccess>
+</CDADescriptor>
